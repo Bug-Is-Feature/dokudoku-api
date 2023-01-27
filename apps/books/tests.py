@@ -82,7 +82,7 @@ class BookViewSetTest(TestSetUp):
         self.assertTrue(len(response.data) == 0,
             f'Expected 0 book from user view, not {len(response.data)}.')
 
-    def test_book_param_forbidden_action(self):
+    def test_book_query_param_forbidden_action(self):
         '''
         Simulate a user trying to retrieve book data
         but passing both 2 query parameters (ggbookid, owner)
@@ -97,7 +97,7 @@ class BookViewSetTest(TestSetUp):
         with self.assertRaises(FieldError):
             BookViewSet.as_view({'get': 'retrieve'})(request)
 
-    def test_book_param_unknown(self):
+    def test_book_query_param_unknown(self):
         '''
         Simulate a user trying to retrieve book data
         but using unknown parameter in url
@@ -109,6 +109,37 @@ class BookViewSetTest(TestSetUp):
 
         with self.assertRaises(FieldError):
             BookViewSet.as_view({'get': 'retrieve'})(request)
+
+    def test_book_path_param(self):
+        '''
+        Simulate a user/admin trying to retrieve book data 
+        by passing :id as path parameter
+
+        A response should return with specific book data
+        '''
+        request = self.factory.get(f'/api/books/{self.book_obj1.id}/')
+        force_authenticate(request, user=self.admin)
+        response = BookViewSet.as_view({'get': 'retrieve'})(request, pk=self.book_obj1.id)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK,
+            f'Expected http status 200, not {response.status_code}.')
+        self.assertEqual(response.data['title'], 'test_book_1',
+            f'Expected `test_book_1` as title, not `{response.data["title"]}`.')
+
+    def test_book_path_param_no_permission(self):
+        '''
+        Simulate a user trying to retrieve other user's book data 
+        by passing :id of that book as path parameter
+        which is not allowed
+
+        An error message should return as response
+        '''
+        request = self.factory.get(f'/api/books/{self.book_obj1.id}/')
+        force_authenticate(request, user=self.user)
+        response = BookViewSet.as_view({'get': 'retrieve'})(request, pk=self.book_obj1.id)
+        
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND,
+            f'Expected http status 404, not {response.status_code}.')
 
     def test_book_create(self):
         '''
@@ -221,8 +252,8 @@ class BookViewSetTest(TestSetUp):
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT,
             f'Expected http status 200, not {response.status_code}.')
-        self.assertTrue(len(Book.objects.all()) == 1, 
-            f'Expected 1 item remaining after delete, not {len(Book.objects.all())}')
+        self.assertFalse(Book.objects.filter(id=self.book_obj1.id).exists(),
+            f'Expected no book with id `{self.book_obj1.id}` still exist.')
 
     def test_book_delete_no_permission(self):
         '''
@@ -266,6 +297,37 @@ class AuthorViewSetTest(TestSetUp):
         force_authenticate(request, user=self.user)
         response = AuthorViewSet.as_view({'get': 'list'})(request)
 
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN,
+            f'Expected http status 403, not {response.status_code}.')
+
+    def test_author_path_param(self):
+        '''
+        Simulate a user/admin trying to retrieve author data 
+        by passing :id as path parameter
+
+        A response should return with specific author data
+        '''
+        request = self.factory.get(f'/api/authors/{self.author_obj1.id}/')
+        force_authenticate(request, user=self.admin)
+        response = AuthorViewSet.as_view({'get': 'retrieve'})(request, pk=self.author_obj1.id)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK,
+            f'Expected http status 200, not {response.status_code}.')
+        self.assertEqual(response.data['name'], 'test_book_1_author',
+            f'Expected `test_book_1_author` as name, not `{response.data["name"]}`.')
+
+    def test_author_path_param_no_permission(self):
+        '''
+        Simulate a user trying to retrieve other user book's author 
+        by passing :id of that author as path parameter
+        which is not allowed
+
+        An error message should return as response
+        '''
+        request = self.factory.get(f'/api/authors/{self.author_obj1.id}/')
+        force_authenticate(request, user=self.user)
+        response = AuthorViewSet.as_view({'get': 'retrieve'})(request, pk=self.author_obj1.id)
+        
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN,
             f'Expected http status 403, not {response.status_code}.')
 
@@ -345,6 +407,8 @@ class AuthorViewSetTest(TestSetUp):
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT,
             f'Expected http status 204, not {response.status_code}.')
+        self.assertFalse(Author.objects.filter(id=self.author_obj3.id).exists(),
+            f'Expected no author with id `{self.author_obj3.id}` still exist.')
 
     def test_author_delete_no_permission(self):
         '''
