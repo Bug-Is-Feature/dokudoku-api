@@ -30,6 +30,7 @@
     1. Create DB's user: `CREATE USER <YOUR_DB_USER>;`
     1. Connect to your DB: `\c <YOUR_DB_NAME>`
     1. Grant privileges to user on schema of the DB ('public' is default): `GRANT ALL PRIVILEGES ON SCHEMA public TO <YOUR DB USER>;`
+    1. (optional) If you want to execute test files, you have to give CREATEDB privilege to user: `ALTER USER <YOUR DB USER> CREATEDB;`
 1. Setup .env file
     ```
     export SECRET_KEY = 'django-insecure-<YOUR_DJANGO_SECRET_KEY>'
