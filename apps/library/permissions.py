@@ -44,10 +44,13 @@ class LibraryBookPermission(permissions.BasePermission):
         elif view.action == 'create':
             body = json.loads(request.body)
             if 'book_data' in body.keys():
-                book_owner = body['book_data']['created_by']
-                if  book_owner and book_owner != str(request.user):
-                    self.message = 'You can not add other user\'s custom book into your library.'
-                    return request.user.is_admin
+                if 'created_by' in body['book_data'].keys():
+                    book_owner = body['book_data']['created_by']
+                    if  book_owner and book_owner != str(request.user):
+                        self.message = 'You can not add other user\'s custom book into your library.'
+                        return request.user.is_admin
+                    else:
+                        return True
                 else:
                     return True
             else:
@@ -63,7 +66,7 @@ class LibraryBookPermission(permissions.BasePermission):
             return obj.library.created_by == request.user or request.user.is_admin
         elif view.action in ['update', 'partial_update']:
             body = json.loads(request.body)
-            if 'is_completed' in body.keys():
+            if 'is_completed' in body.keys() and len(body.keys()) == 1:
                 return obj.library.created_by == request.user or request.user.is_admin
             else:
                 self.message = 'You do not have permission to edit this attribute'

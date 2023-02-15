@@ -60,6 +60,6 @@ class LibraryBookViewSet(viewsets.ModelViewSet):
             if self.request.user.is_admin:
                 return LibraryBook.objects.all()
             else:
-                library = get_object_or_404(Library.objects.filter(user=self.request.user))
+                library = get_object_or_404(Library.objects.filter(created_by=self.request.user))
                 return LibraryBook.objects.filter(library=library)
         

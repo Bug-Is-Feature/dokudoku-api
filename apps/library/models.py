@@ -6,7 +6,7 @@ from apps.users.models import User
 # Create your models here.  
 class Library(models.Model):
     created_by = models.OneToOneField(User, on_delete=models.CASCADE, db_index=True)
-    created_at  = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'user_library'
