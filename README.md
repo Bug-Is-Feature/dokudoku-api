@@ -16,6 +16,8 @@
         -   [Book Routes](#book-routes)
         -   [Author Routes](#author-routes)
         -   [Session Routes](#session-routes)
+        -   [Library Routes](#library-routes)
+        -   [Library Books Routes](#library-books-routes)
 
 ## Setting up the project locally
 
@@ -79,10 +81,25 @@
     -   name
 
 -   Reading_sessions (session)
+
     -   **PK**: id
     -   **FK** [User]: user
     -   **FK** [Book]: book
     -   duration
+    -   created_at
+
+-   Library (user_library)
+
+    -   **PK**: id
+    -   **FK** [User]: created_by
+    -   created_at
+
+-   LibraryBook (library_book)
+
+    -   **PK**: id
+    -   **FK** [Library]: library
+    -   **FK** [Book]: book
+    -   is_completed
     -   created_at
 
 ## API
@@ -258,13 +275,7 @@ Example **Custom Book** Response:
     "currency_code": "THB",
     "price": 150.0,
     "created_by": {
-        "uid": "kM5cDAwpIiM7YXXXXXXXXXXXXXXX",
-        "last_login": "2023-01-13T05:09:28.617875+07:00",
-        "email": "abc@abc.com",
-        "current_lvl": 1,
-        "current_exp": 0,
-        "is_admin": false,
-        "date_joined": "2023-01-13T05:09:28.617875+07:00"
+        ... User Data ...
     },
     "google_book_id": null,
     "authors": [
@@ -405,34 +416,138 @@ Example Response:
 {
     "id": 1,
     "book": {
-        "id": 2,
-        "title": "",
-        "subtitle": "",
-        "category": "",
-        "thumbnail": "",
-        "description": "",
-        "page_count": 1,
-        "currency_code": "",
-        "price": 0.0,
-        "created_by": null,
-        "google_book_id": "XXXXXXXXXXXX",
-        "authors": [
-            {
-                ...
-            }
-        ],
-        "created_at": "2023-01-13T18:43:50.632678+07:00"
+        ... Book Data ...
     },
     "duration": 600,
     "created_by": {
-        "uid": "EiDHQmmoMGYldtPOGmryK0c3bIw2",
-        "last_login": null,
-        "email": "",
-        "current_lvl": 1,
-        "current_exp": 0,
-        "is_admin": false,
-        "date_joined": "2023-01-13T05:10:05.984843+07:00"
+        ... User Data ...
     },
     "created_at": "2023-01-16T19:09:25.502573+07:00"
+}
+```
+
+<hr>
+
+### Library Routes
+
+**/library**
+
+-   GET
+
+    -   Permission:
+        -   Admin: Fetch all library
+        -   User: Fetch their own library
+    -   Query Parameter
+        -   **uid**: Filter by uid
+            -   Permission: Admin, Owner
+
+-   POST
+
+    -   Permission: Admin (For normal user, use POST /library-books/)
+    -   Example Request Body:
+        ```
+        {
+            "uid": "XXXXXXXXXXXXXXX"
+        }
+        ```
+
+**/library/:id**
+
+-   GET
+
+    -   Permission: Admin, User **[Owner Only]**
+
+-   PUT & PATCH
+
+    -   Permission: Admin
+
+-   DELETE
+    -   Permission: Admin
+
+Example Response:
+
+```
+{
+    "id": 2,
+    "created_by": {
+        ... User Data ...
+    },
+    "created_at": "2023-01-16T19:09:25.502573+07:00",
+    "book_count": 1,
+    "completed_count": 1,
+    "incomplete_count": 0,
+    "books": [
+        {
+            ... Library Books Data ...
+        },
+        {
+            ...
+        }
+    ]
+}
+```
+
+<hr>
+
+### Library Books Routes
+
+**/library-books**
+
+-   GET
+
+    -   Permission:
+        -   Admin: Fetch every book in every user library
+        -   User: Fetch every book in their own library
+    -   Query Parameter:
+        -   **library_id**: Filter by library ID
+            -   Permission: Admin, User **[Owner Only]**
+
+-   POST
+    -   NOTICE: This operation **create user's library and book automatically** if the data not exist in database.
+    -   Permission: Everyone
+    -   Example Request Body: TRY NOT TO INCLUDE BOTH google_book_id and created_by in `book_data` to avoid any unexpected bug
+        ```
+        {
+            "book_data": {
+                "title": "",
+                "subtitle": "",
+                "category": "",
+                "thumbnail": "",
+                "description": "",
+                "page_count": 1,
+                "currency_code": "",
+                "price": 0.0,
+                "google_book_id": ""
+            },
+            "is_completed": true
+        }
+        ```
+
+**/library-books/:id**
+
+-   GET
+
+    -   Permission: Admin, User **[Owner Only]**
+
+-   PUT & PATCH
+
+    -   Permission:
+        -   Admin: Can edit every attribute
+        -   User **[Owner Only]**: Can edit only `is_completed`
+
+-   DELETE
+
+    -   Permission: Admin, User **[Owner Only]**
+
+Example Response:
+
+```
+{
+    "library_book_id": 1,
+    "is_completed": true,
+    "created_at": "2023-02-13T10:51:21.393000+07:00",
+    "book": {
+        ... Book Data ...
+    }
 }
 ```
