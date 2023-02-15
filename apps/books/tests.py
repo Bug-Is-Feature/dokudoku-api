@@ -251,7 +251,7 @@ class BookViewSetTest(TestSetUp):
         response = BookViewSet.as_view({'delete': 'destroy'})(request, pk=self.book_obj1.id)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT,
-            f'Expected http status 200, not {response.status_code}.')
+            f'Expected http status 204, not {response.status_code}.')
         self.assertFalse(Book.objects.filter(id=self.book_obj1.id).exists(),
             f'Expected no book with id `{self.book_obj1.id}` still exist.')
 
