@@ -64,6 +64,7 @@ class Migration(migrations.Migration):
                     "library",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
+                        related_name="books",
                         to="library.library",
                     ),
                 ),

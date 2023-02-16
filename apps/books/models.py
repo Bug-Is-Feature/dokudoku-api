@@ -5,7 +5,7 @@ from apps.users.models import User
 
 # Create your models here.        
 class Book(models.Model):
-    google_book_id = models.CharField(max_length=12, null=True, blank=True)
+    google_book_id = models.CharField(max_length=12, unique=True, null=True, blank=True)
     title = models.CharField(max_length=255, null=False)
     subtitle = models.CharField(max_length=255, null=True, blank=True)
     category = models.CharField(max_length=40, null=True, blank=True)

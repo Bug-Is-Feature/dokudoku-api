@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "google_book_id",
-                    models.CharField(blank=True, max_length=12, null=True),
+                    models.CharField(blank=True, max_length=12, null=True, unique=True),
                 ),
                 ("title", models.CharField(max_length=255)),
                 ("subtitle", models.CharField(blank=True, max_length=255, null=True)),

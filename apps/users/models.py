@@ -27,7 +27,7 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
     uid = models.CharField(max_length=28, primary_key=True, unique=True, null=False)
-    email = models.CharField(max_length=255, unique=True, null=False)
+    email = models.CharField(max_length=255, null=False)
     current_lvl = models.IntegerField(default=1)
     current_exp = models.IntegerField(default=0)
     is_admin = models.BooleanField(default=False)
