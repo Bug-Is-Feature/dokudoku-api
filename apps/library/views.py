@@ -21,7 +21,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
             if params:
                 raise FieldError({'QUERY_PARAM_ERROR': f'Unknown query parameter: {list(params.keys())}'})
             elif uid:
-                return get_object_or_404(Library.objects.filter(use=uid))
+                return get_object_or_404(Library.objects.filter(created_by=uid))
             else:
                 raise FieldError({'QUERY_PARAM_ERROR': 'Unknown error'})
         else:
@@ -52,7 +52,7 @@ class LibraryBookViewSet(viewsets.ModelViewSet):
                 if self.request.user.is_admin:
                     return get_list_or_404(LibraryBook.objects.filter(book=book_id))
                 else:
-                    library = get_object_or_404(Library.objects.filter(user=self.request.user))
+                    library = get_object_or_404(Library.objects.filter(created_by=self.request.user))
                     return get_object_or_404(LibraryBook.objects.filter(library=library, book=book_id))
             else:
                 raise FieldError({'QUERY_PARAM_ERROR': 'Unknown error'})
