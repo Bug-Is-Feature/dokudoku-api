@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.test import force_authenticate
 
-from apps.books.models import Book
+from apps.books.models import Author, Book
 from ..test_setup import LibraryAppTestSetUp
 from ...models import Library, LibraryBook
 from ...views import LibraryBookViewSet
@@ -60,6 +60,11 @@ class LibraryBookCreateTest(LibraryAppTestSetUp):
                 "currency_code": "THB",
                 "price": 123,
                 "created_by": self.user1.uid,
+                "authors": [
+                    {
+                        "name": "test_library_book_author"
+                    }
+                ]
             },
         }, format='json')
         force_authenticate(request, user=self.user1)
@@ -67,8 +72,13 @@ class LibraryBookCreateTest(LibraryAppTestSetUp):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED,
             f'Expected http status 201, not {response.status_code}.')
-        self.assertTrue(Book.objects.filter(title='test_library_book_create').exists(),
+        created_book = Book.objects.filter(title='test_library_book_create')
+        self.assertTrue(created_book.exists(),
             'Expected book with title `test_library_book_create` created automatically, but the book is not found.')
+        self.assertTrue(Author.objects.filter(name='test_library_book_author').exists(),
+            'Expected author with name `test_library_book_author` created, but the author is not found.')
+        self.assertEqual(Author.objects.get(name='test_library_book_author').book, *created_book,
+            'Expected author `test_library_book_author` to have book = `test_library_book_create`, but the value is not right.')
 
 class LibraryBookCreatePermissionTest(LibraryAppTestSetUp):
 

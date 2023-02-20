@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from apps.books.models import Book
+from apps.books.models import Author, Book
 from apps.books.serializers import BookSerializer
 from apps.users.models import User
 from apps.users.serializers import UserSerializer
@@ -19,12 +19,19 @@ class LibraryBookSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         library, _ = Library.objects.get_or_create(created_by=self.context['request'].user)
         book_data = self.context['request'].data.get('book_data')
+        authors = book_data.pop('authors') if 'authors' in book_data.keys() else None
         if 'created_by' in book_data.keys() and book_data['created_by']:
             created_by = get_object_or_404(User.objects.filter(uid=book_data.pop('created_by')))
-            book, _ = Book.objects.get_or_create(created_by=created_by, **book_data)
+            book, created = Book.objects.get_or_create(created_by=created_by, **book_data)
+            if created and authors:
+                for author in authors:
+                    Author.objects.create(book=book, **author)
             return LibraryBook.objects.create(library=library, book=book, **validated_data)
         else:
-            book, _ = Book.objects.get_or_create(**book_data)
+            book, created = Book.objects.get_or_create(**book_data)
+            if created and authors:
+                for author in authors:
+                    Author.objects.create(book=book, **author)
             return LibraryBook.objects.create(library=library, book=book, **validated_data)
 
 class LibrarySerializer(serializers.ModelSerializer):
