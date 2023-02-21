@@ -1,5 +1,6 @@
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
+from iso4217 import Currency
 from rest_framework import serializers
 
 from apps.users.serializers import UserSerializer
@@ -46,3 +47,15 @@ class BookSerializer(serializers.ModelSerializer):
         for author in authors:
             Author.objects.create(book=book, **author)
         return book
+
+    def validate(self, attrs):
+        if 'page_count' in attrs.keys() and attrs['page_count'] < 0:
+            raise serializers.ValidationError({'page_count': 'Ensure this field is greater than zero.'})
+        if 'currency_code' in attrs.keys() and not attrs['currency_code'].lower() in Currency.__members__.keys():
+            raise serializers.ValidationError({'currency_code': 'Invalid currency code.'})
+        if 'price' in attrs.keys() and attrs['price'] < 0:
+            raise serializers.ValidationError({'price': 'Ensure this field is greater than zero.'})
+        if 'google_book_id' in attrs.keys() and len(attrs['google_book_id']) != 12:
+            raise serializers.ValidationError({'google_book_id': 'Ensure this field has length of 12 characters.'})
+
+        return super().validate(attrs)

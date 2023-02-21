@@ -16,10 +16,6 @@ class BookCreateTest(BooksAppTestSetUp):
         '''
         request = self.factory.post('/api/books/', {
             "title": "test_book_title",
-            "subtitle": "test_book_subtitle",
-            "category": "test_book_category",
-            "thumbnail": "test_book_thumbnail",
-            "description": "test_book_desc",
             "page_count": 134,
             "currency_code": "THB",
             "price": 100,

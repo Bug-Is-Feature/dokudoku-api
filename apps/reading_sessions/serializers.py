@@ -30,3 +30,8 @@ class SessionSerializer(serializers.ModelSerializer):
             return super().create(validated_data)
         else:
             raise PermissionDenied
+
+    def validate(self, attrs):
+        if 'duration' in attrs.keys() and attrs['duration'] < 0:
+            raise serializers.ValidationError({'duration': 'Ensure this field is greater than zero.'})
+        return super().validate(attrs)
