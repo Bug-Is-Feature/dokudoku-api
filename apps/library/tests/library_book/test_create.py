@@ -62,7 +62,7 @@ class LibraryBookCreateTest(LibraryAppTestSetUp):
                 "created_by": self.user1.uid,
                 "authors": [
                     {
-                        "name": "test_library_book_author"
+                        "name": " test_library_book_author "
                     }
                 ]
             },

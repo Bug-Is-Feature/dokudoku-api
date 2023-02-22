@@ -1,7 +1,9 @@
 from django.core.exceptions import FieldError
 from django.shortcuts import get_object_or_404, get_list_or_404
-from rest_framework import viewsets
+from rest_framework import status, viewsets
+from rest_framework.response import Response
 
+from apps.books.models import Book
 from .models import Library, LibraryBook
 from .permissions import LibraryPermission, LibraryBookPermission
 from .serializers import LibrarySerializer, LibraryBookSerializer
@@ -62,4 +64,13 @@ class LibraryBookViewSet(viewsets.ModelViewSet):
             else:
                 library = get_object_or_404(Library.objects.filter(created_by=self.request.user))
                 return LibraryBook.objects.filter(library=library)
+
+    def destroy(self, request, *args, **kwargs):
+        library_book = self.get_object()
+        book = get_object_or_404(Book.objects.filter(id=library_book.book.id))
+        if book.created_by and book.created_by == request.user:
+            _ = Book.objects.filter(id=book.id).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return super().destroy(request, *args, **kwargs)
         

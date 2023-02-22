@@ -25,13 +25,15 @@ class LibraryBookSerializer(serializers.ModelSerializer):
             book, created = Book.objects.get_or_create(created_by=created_by, **book_data)
             if created and authors:
                 for author in authors:
-                    Author.objects.create(book=book, **author)
+                    author['name'] = author['name'].strip()
+                    _ = Author.objects.create(book=book, **author)
             return LibraryBook.objects.create(library=library, book=book, **validated_data)
         else:
             book, created = Book.objects.get_or_create(**book_data)
             if created and authors:
                 for author in authors:
-                    Author.objects.create(book=book, **author)
+                    author['name'] = author['name'].strip()
+                    _ = Author.objects.create(book=book, **author)
             return LibraryBook.objects.create(library=library, book=book, **validated_data)
 
 class LibrarySerializer(serializers.ModelSerializer):
