@@ -51,7 +51,7 @@ class BookSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if 'page_count' in attrs.keys() and attrs['page_count'] < 0:
             raise serializers.ValidationError({'page_count': 'Ensure this field is greater than zero.'})
-        if 'currency_code' in attrs.keys() and not attrs['currency_code'].lower() in Currency.__members__.keys():
+        if 'currency_code' in attrs.keys() and attrs['currency_code'] and not attrs['currency_code'].lower() in Currency.__members__.keys():
             raise serializers.ValidationError({'currency_code': 'Invalid currency code.'})
         if 'price' in attrs.keys() and attrs['price'] < 0:
             raise serializers.ValidationError({'price': 'Ensure this field is greater than zero.'})
