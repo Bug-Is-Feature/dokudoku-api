@@ -27,7 +27,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '10.0.2.2',
+    '127.0.0.1',
+]
 
 INTERNAL_IPS = [
     '10.0.2.2',
@@ -47,6 +50,7 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.books',
     'apps.reading_sessions',
+    'apps.library',
 ]
 
 MIDDLEWARE = [

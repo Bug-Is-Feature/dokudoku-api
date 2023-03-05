@@ -1,11 +1,12 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from iso4217 import Currency
 
 from apps.users.models import User
 
 # Create your models here.        
 class Book(models.Model):
-    google_book_id = models.CharField(max_length=12, null=True, blank=True)
+    google_book_id = models.CharField(max_length=12, unique=True, null=True, blank=True)
     title = models.CharField(max_length=255, null=False)
     subtitle = models.CharField(max_length=255, null=True, blank=True)
     category = models.CharField(max_length=40, null=True, blank=True)
@@ -24,10 +25,18 @@ class Book(models.Model):
         return self.title
 
     def clean(self):
+        if self.page_count < 0:
+            raise ValidationError({'page_count': 'Ensure this field is greater than zero.'})
+        if self.currency_code and not self.currency_code.lower() in Currency.__members__.keys():
+            raise ValidationError({'currency_code': 'Invalid currency code.'})
+        if self.price < 0:
+            raise ValidationError({'price': 'Ensure this field is greater than zero.'})
         if self.google_book_id is None and self.created_by is None:
-            raise ValidationError({'VALIDATION_ERROR': 'google_book_id or created_by should exist in request body.'})
+            raise ValidationError({'attribute_missing': 'google_book_id or created_by should exist in request body.'})
         if self.google_book_id and self.created_by:
-            raise ValidationError({'VALIDATION_ERROR': 'Request body with google_book_id and created_by are not allowed, only one attribute can exist.'})
+            raise ValidationError({'forbidden_action': 'Request body with google_book_id and created_by are not allowed, only one attribute can exist.'})
+        if self.google_book_id and len(str(self.google_book_id)) != 12:
+            raise ValidationError({'google_book_id': 'Ensure this field has length of 12 characters.'})
     
     def save(self, *args, **kwargs):
         self.full_clean()

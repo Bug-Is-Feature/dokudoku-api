@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                         max_length=28, primary_key=True, serialize=False, unique=True
                     ),
                 ),
-                ("email", models.CharField(max_length=255, unique=True)),
+                ("email", models.CharField(max_length=255)),
                 ("current_lvl", models.IntegerField(default=1)),
                 ("current_exp", models.IntegerField(default=0)),
                 ("is_admin", models.BooleanField(default=False)),
