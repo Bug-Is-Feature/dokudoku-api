@@ -18,6 +18,7 @@
         -   [Session Routes](#session-routes)
         -   [Library Routes](#library-routes)
         -   [Library Books Routes](#library-books-routes)
+        -   [Achievement Routes](#achievement-routes)
 
 ## Setting up the project locally
 
@@ -101,6 +102,15 @@
     -   **FK** [Library]: library
     -   **FK** [Book]: book
     -   is_completed
+    -   created_at
+
+-   Achievements (achievement)
+
+    -   **PK**: id
+    -   description
+    -   condition
+    -   threshold
+    -   available
     -   created_at
 
 ## API
@@ -554,5 +564,58 @@ Example Response:
     "book": {
         ... Book Data ...
     }
+}
+```
+
+<hr>
+
+### Achievement Routes
+
+**/achievements**
+
+-   GET
+
+    -   Permission:
+        -   Admin: Fetch every achievements in database
+        -   User: Fetch every achievements in database that's **available**
+
+-   POST
+    -   Permission: Admin
+    -   Enum Types:
+        -   `condition`: ['Book Amount', 'Total Reading Hours', 'Stopwatch Reading Hours', 'Hourglass Reading Hours']
+    -   Example Request Body:
+        ```
+        {
+            "name": "achievement",
+            "description": "achievement_desc",
+            "condition": "Book Amount",
+            "threshold": 20,
+            "available": false
+        }
+        ```
+
+**/achievements/:id**
+
+-   GET
+
+    -   Permission: Admin, User **[available = true]**
+
+-   PUT & PATCH
+
+    -   Permission: Admin
+
+-   DELETE
+
+    -   Permission: Admin
+
+Example Response:
+
+```
+{
+    "id": 1,
+    "name": "achievement",
+    "description": "achievement_description",
+    "condition": "Hourglass Reading Hours',
+    "threshold": 24
 }
 ```
