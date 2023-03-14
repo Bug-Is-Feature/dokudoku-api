@@ -86,6 +86,7 @@
     -   **FK** [User]: user
     -   **FK** [Book]: book
     -   duration
+    -   timer_type
     -   created_at
 
 -   Library (user_library)
@@ -392,11 +393,14 @@ Example Response:
     -   Permission:
         -   Google Book Session: Everyone
         -   Custom Book Session: Admin, User **[Owner Only]**
+    -   Enum Types:
+        -   `timer_type`: ['Stopwatch', 'Hourglass']
     -   Example Request Body:
         ```
         {
             "uid": "EiDHQmmoXXXXXXXXXXXXXXXXXXXX",
             "book_id": 2,
+            "timer_type": "Stopwatch",
             "duration": 600
         }
         ```
@@ -422,6 +426,7 @@ Example Response:
     "created_by": {
         ... User Data ...
     },
+    "timer_type": "Stopwatch",
     "created_at": "2023-01-16T19:09:25.502573+07:00"
 }
 ```

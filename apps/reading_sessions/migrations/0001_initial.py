@@ -28,6 +28,13 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("duration", models.IntegerField()),
+                (
+                    "timer_type", 
+                    models.CharField(
+                        choices=[("SW", "Stopwatch"), ("HG", "Hourglass")],
+                        max_length=2,
+                    ),
+                ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 (
                     "book",

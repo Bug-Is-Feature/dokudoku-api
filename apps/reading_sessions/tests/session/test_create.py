@@ -17,6 +17,7 @@ class SessionCreateTest(SessionsAppTestSetUp):
         request = self.factory.post('/api/sessions/', {
             "book_id": self.book_obj.id,
             "duration": 600,
+            "timer_type": Session.TimerType.HOURGLASS.label,
             "uid": self.admin.uid
         }, format='json')
         force_authenticate(request, user=self.admin)
