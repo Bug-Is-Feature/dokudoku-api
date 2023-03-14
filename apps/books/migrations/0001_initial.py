@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
                 ("category", models.CharField(blank=True, max_length=40, null=True)),
                 ("thumbnail", models.TextField(blank=True, null=True)),
                 ("description", models.TextField(blank=True, null=True)),
-                ("page_count", models.IntegerField()),
+                ("page_count", models.PositiveIntegerField()),
                 (
                     "currency_code",
                     models.CharField(blank=True, max_length=3, null=True),

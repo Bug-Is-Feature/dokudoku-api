@@ -47,6 +47,8 @@ class SessionDurationValidatorTest(SessionsAppTestSetUp):
         self.assertTrue(Session.objects.count() == 1,
             'Expected no session created.')
         
+class SessionTimerTypeValidatorTest(SessionsAppTestSetUp):
+        
     def test_session_validator_invalid_timer_type(self):
         '''
         Simulate a user trying to create a session

@@ -12,7 +12,7 @@ class Session(models.Model):
         HOURGLASS = 'HG', _('Hourglass')
 
     book = models.ForeignKey(Book, related_name='sessions', on_delete=models.CASCADE, db_index=True)
-    duration = models.IntegerField(null=False)
+    duration = models.PositiveIntegerField(null=False)
     timer_type = models.CharField(max_length=2, choices=TimerType.choices, null=False)
     created_by = models.ForeignKey(User, related_name='sessions', on_delete=models.CASCADE, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)

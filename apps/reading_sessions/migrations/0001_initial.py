@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("duration", models.IntegerField()),
+                ("duration", models.PositiveIntegerField()),
                 (
                     "timer_type", 
                     models.CharField(

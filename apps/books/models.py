@@ -12,7 +12,7 @@ class Book(models.Model):
     category = models.CharField(max_length=40, null=True, blank=True)
     thumbnail = models.TextField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-    page_count = models.IntegerField(null=False)
+    page_count = models.PositiveIntegerField(null=False)
     currency_code = models.CharField(max_length=3, null=True, blank=True)
     price = models.FloatField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='books', on_delete=models.CASCADE, db_index=True, null=True, blank=True)
@@ -25,8 +25,6 @@ class Book(models.Model):
         return self.title
 
     def clean(self):
-        if self.page_count < 0:
-            raise ValidationError({'page_count': 'Ensure this field is greater than zero.'})
         if self.currency_code and not self.currency_code.lower() in Currency.__members__.keys():
             raise ValidationError({'currency_code': 'Invalid currency code.'})
         if self.price < 0:
