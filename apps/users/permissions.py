@@ -18,6 +18,8 @@ class UserPermission(permissions.BasePermission):
             if 'uid' in body:
                 self.message = 'UID are not editable'
                 return False
+            if 'is_admin' in body:
+                return request.user.is_admin
             return obj == request.user or request.user.is_admin
         elif view.action == 'destroy':
             return request.user.is_admin

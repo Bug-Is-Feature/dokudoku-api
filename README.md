@@ -18,6 +18,7 @@
         -   [Session Routes](#session-routes)
         -   [Library Routes](#library-routes)
         -   [Library Books Routes](#library-books-routes)
+        -   [Achievement Routes](#achievement-routes)
 
 ## Setting up the project locally
 
@@ -86,6 +87,7 @@
     -   **FK** [User]: user
     -   **FK** [Book]: book
     -   duration
+    -   timer_type
     -   created_at
 
 -   Library (user_library)
@@ -100,6 +102,15 @@
     -   **FK** [Library]: library
     -   **FK** [Book]: book
     -   is_completed
+    -   created_at
+
+-   Achievements (achievement)
+
+    -   **PK**: id
+    -   description
+    -   condition
+    -   threshold
+    -   available
     -   created_at
 
 ## API
@@ -392,11 +403,14 @@ Example Response:
     -   Permission:
         -   Google Book Session: Everyone
         -   Custom Book Session: Admin, User **[Owner Only]**
+    -   Enum Types:
+        -   `timer_type`: ['Stopwatch', 'Hourglass']
     -   Example Request Body:
         ```
         {
             "uid": "EiDHQmmoXXXXXXXXXXXXXXXXXXXX",
             "book_id": 2,
+            "timer_type": "Stopwatch",
             "duration": 600
         }
         ```
@@ -422,6 +436,7 @@ Example Response:
     "created_by": {
         ... User Data ...
     },
+    "timer_type": "Stopwatch",
     "created_at": "2023-01-16T19:09:25.502573+07:00"
 }
 ```
@@ -549,5 +564,58 @@ Example Response:
     "book": {
         ... Book Data ...
     }
+}
+```
+
+<hr>
+
+### Achievement Routes
+
+**/achievements**
+
+-   GET
+
+    -   Permission:
+        -   Admin: Fetch every achievements in database
+        -   User: Fetch every achievements in database that's **available**
+
+-   POST
+    -   Permission: Admin
+    -   Enum Types:
+        -   `condition`: ['Book Amount', 'Total Reading Hours', 'Stopwatch Reading Hours', 'Hourglass Reading Hours']
+    -   Example Request Body:
+        ```
+        {
+            "name": "achievement",
+            "description": "achievement_desc",
+            "condition": "Book Amount",
+            "threshold": 20,
+            "available": false
+        }
+        ```
+
+**/achievements/:id**
+
+-   GET
+
+    -   Permission: Admin, User **[available = true]**
+
+-   PUT & PATCH
+
+    -   Permission: Admin
+
+-   DELETE
+
+    -   Permission: Admin
+
+Example Response:
+
+```
+{
+    "id": 1,
+    "name": "achievement",
+    "description": "achievement_description",
+    "condition": "Hourglass Reading Hours',
+    "threshold": 24
 }
 ```

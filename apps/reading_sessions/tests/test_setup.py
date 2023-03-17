@@ -32,5 +32,6 @@ class SessionsAppTestSetUp(APITestCase):
         self.session_obj = Session.objects.create(
             book=self.book_obj,
             duration=300,
+            timer_type=Session.TimerType.STOPWATCH,
             created_by=self.admin
         )

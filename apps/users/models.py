@@ -28,8 +28,8 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractBaseUser):
     uid = models.CharField(max_length=28, primary_key=True, unique=True, null=False)
     email = models.CharField(max_length=255, null=False)
-    current_lvl = models.IntegerField(default=1)
-    current_exp = models.IntegerField(default=0)
+    current_lvl = models.PositiveIntegerField(default=1)
+    current_exp = models.PositiveIntegerField(default=0)
     is_admin = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
 

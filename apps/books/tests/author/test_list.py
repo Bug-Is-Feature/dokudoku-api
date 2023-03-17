@@ -26,7 +26,7 @@ class AuthorListTest(BooksAppTestSetUp):
         self.assertEqual(response.data, serializers.data,
             'Expected to get all authors in the database, but the response is not right.')
         self.assertTrue(len(response.data) == 3,
-            f'Expected 3 authors from admin view, not {len(response.data) == 3}.')
+            f'Expected 3 authors from admin view, not {len(response.data)}.')
 
 class AuthorListPermissionTest(BooksAppTestSetUp):
 

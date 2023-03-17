@@ -46,3 +46,27 @@ class SessionDurationValidatorTest(SessionsAppTestSetUp):
             f'Expected http status 400, not {response.status_code}.')
         self.assertTrue(Session.objects.count() == 1,
             'Expected no session created.')
+        
+class SessionTimerTypeValidatorTest(SessionsAppTestSetUp):
+        
+    def test_session_validator_invalid_timer_type(self):
+        '''
+        Simulate a user trying to create a session
+        but passing invalid timer_type as attribute (not match with enum)
+        
+        An error message should return as response
+        '''
+        request = self.factory.post('/api/sessions/', {
+            "book_id": self.book_obj.id,
+            "duration": 600,
+            "timer_type": "X",
+            "uid": self.admin.uid
+        }, format='json')
+        force_authenticate(request, user=self.admin)
+        response = SessionViewSet.as_view({'post': 'create'})(request)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST,
+            f'Expected http status 400, not {response.status_code}.')
+        self.assertTrue(Session.objects.count() == 1,
+            'Expected no session created.')
+        

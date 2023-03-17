@@ -5,16 +5,18 @@ from rest_framework import serializers
 from apps.books.models import Book
 from apps.books.serializers import BookSerializer
 from apps.users.serializers import UserSerializer
+from apps.utils.serializers import ChoiceField
 from .models import Session
 
 class SessionSerializer(serializers.ModelSerializer):
     book = BookSerializer(many=False, read_only=True)
     created_by = UserSerializer(many=False, read_only=True)
+    timer_type = ChoiceField(choices=Session.TimerType.choices)
 
     class Meta:
         model = Session
         fields = (
-            'id', 'book', 'duration', 'created_by',
+            'id', 'book', 'duration', 'created_by', 'timer_type',
             'book_id', 'uid', 'created_at')
         read_only_fields = ('created_at',)
         extra_kwargs = {
@@ -30,8 +32,3 @@ class SessionSerializer(serializers.ModelSerializer):
             return super().create(validated_data)
         else:
             raise PermissionDenied
-
-    def validate(self, attrs):
-        if 'duration' in attrs.keys() and attrs['duration'] < 0:
-            raise serializers.ValidationError({'duration': 'Ensure this field is greater than zero.'})
-        return super().validate(attrs)

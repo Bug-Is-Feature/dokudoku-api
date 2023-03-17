@@ -27,7 +27,14 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("duration", models.IntegerField()),
+                ("duration", models.PositiveIntegerField()),
+                (
+                    "timer_type", 
+                    models.CharField(
+                        choices=[("SW", "Stopwatch"), ("HG", "Hourglass")],
+                        max_length=2,
+                    ),
+                ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 (
                     "book",

@@ -10,9 +10,9 @@ class LibraryBookIsCompletedValidatorTest(LibraryAppTestSetUp):
     def test_library_book_invalid_is_completed_type(self):
         '''
         Simulate a user trying to add a book into library
-        but passing invalid is__completed as attribute (not boolean)
+        but passing invalid is_completed as attribute (not boolean)
 
-        A response should return with newly created library_book
+        An error message should return as response
         '''
         book = self.book_obj2.__dict__
         book.pop('_state')
