@@ -24,6 +24,8 @@ class Migration(migrations.Migration):
                 ),
                 ("name", models.CharField(max_length=50, unique=True)),
                 ("description", models.TextField(blank=True, null=True)),
+                ("locked_thumbnail", models.TextField()),
+                ("unlocked_thumbnail", models.TextField()),
                 (
                     "condition",
                     models.CharField(

@@ -12,6 +12,8 @@ class Achievement(models.Model):
 
     name = models.CharField(max_length=50, unique=True, null=False)
     description = models.TextField(null=True, blank=True)
+    locked_thumbnail = models.TextField()
+    unlocked_thumbnail = models.TextField()
     condition = models.CharField(max_length=4, choices=UnlockCondition.choices, null=False)
     threshold = models.PositiveIntegerField(null=False)
     available = models.BooleanField(default=False)

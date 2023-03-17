@@ -16,6 +16,8 @@ class AchievementCreateTest(AchievementsAppTestSetUp):
         request = self.factory.post('/api/achievements/', {
             "name": "test_achievement_3",
             "description": "test_test",
+            "locked_thumbnail": "test_locked_thumbnail",
+            "unlocked_thumbnail": "test_unlocked_thumbnail",
             "condition": Achievement.UnlockCondition.HOURGLASS_READING_HOUR.label,
             "threshold": 30,
         }, format='json')
@@ -41,6 +43,8 @@ class AchievementCreatePermissionTest(AchievementsAppTestSetUp):
         request = self.factory.post('/api/achievements/', {
             "name": "test_achievement_4",
             "description": "test_test",
+            "locked_thumbnail": "test_locked_thumbnail",
+            "unlocked_thumbnail": "test_unlocked_thumbnail",
             "condition": Achievement.UnlockCondition.STOPWATCH_READING_HOUR.label,
             "threshold": 30,
         }, format='json')
