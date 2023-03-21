@@ -20,6 +20,8 @@ class AchievementsAppTestSetUp(APITestCase):
         self.achievement_obj1 = Achievement.objects.create(
             name='test_achievement_1',
             description='test_desc',
+            locked_thumbnail='test_locked_thumbnail',
+            unlocked_thumbnail='test_unlocked_thumbnail',
             condition=Achievement.UnlockCondition.TOTAL_READING_HOUR,
             threshold=24,
             available=True,
@@ -27,6 +29,8 @@ class AchievementsAppTestSetUp(APITestCase):
         self.achievement_obj2 = Achievement.objects.create(
             name='test_achievement_2',
             description='test_desc',
+            locked_thumbnail='test_locked_thumbnail',
+            unlocked_thumbnail='test_unlocked_thumbnail',
             condition=Achievement.UnlockCondition.BOOK_AMOUNT,
             threshold=20,
             available=False,

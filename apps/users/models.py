@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
+from apps.achievements.models import Achievement
+
 # Create your models here.
 class CustomUserManager(BaseUserManager):
     def create_user(self, uid, email):
@@ -42,3 +44,14 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.uid
+    
+class UserAchievement(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE, db_index=True)
+
+    class Meta:
+        unique_together = ('user', 'achievement',)
+        db_table = 'user_achievement'
+
+    def __str__(self):
+        return f'{self.user.uid}: {self.achievement.id}'

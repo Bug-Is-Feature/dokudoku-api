@@ -19,6 +19,7 @@
         -   [Library Routes](#library-routes)
         -   [Library Books Routes](#library-books-routes)
         -   [Achievement Routes](#achievement-routes)
+        -   [User Achievement Routes](#user-achievement-routes)
 
 ## Setting up the project locally
 
@@ -48,6 +49,7 @@
     - After download put it somewhere you desired, then copy the path
 1. Do the migration (make sure you're at the project root directory): `python manage.py migrate`
 1. Run the app: `python manage.py runserver`
+1. Load achievements data: `python manage.py loaddata achievements`
 
 ## Schema
 
@@ -108,10 +110,17 @@
 
     -   **PK**: id
     -   description
+    -   locked_thumbnail
+    -   unlocked_thumbnail
     -   condition
     -   threshold
     -   available
     -   created_at
+
+-   User Achievements (user_achievement)
+    -   **PK**: id
+    -   **FK** [User]: user
+    -   **FK** [Achievement]: achievement
 
 ## API
 
@@ -582,12 +591,14 @@ Example Response:
 -   POST
     -   Permission: Admin
     -   Enum Types:
-        -   `condition`: ['Book Amount', 'Total Reading Hours', 'Stopwatch Reading Hours', 'Hourglass Reading Hours']
+        -   `condition`: ['Book Amount', 'Incomplete Book Amount', 'Total Reading Hours', 'Stopwatch Reading Hours', 'Hourglass Reading Hours']
     -   Example Request Body:
         ```
         {
             "name": "achievement",
             "description": "achievement_desc",
+            "locked_thumbnail": "locked_thumbnail",
+            "unlocked_thumbnail": "unlocked_thumbnail",
             "condition": "Book Amount",
             "threshold": 20,
             "available": false
@@ -615,7 +626,57 @@ Example Response:
     "id": 1,
     "name": "achievement",
     "description": "achievement_description",
+    "locked_thumbnail": "locked_thumbnail",
+    "unlocked_thumbnail": "unlocked_thumbnail",
     "condition": "Hourglass Reading Hours',
     "threshold": 24
 }
 ```
+
+<hr>
+
+### User Achievement Routes
+
+**/user-achievements**
+
+-   GET
+
+    -   Permission:
+        -   Admin: Fetch every user's achievements
+        -   User: Fetch their own achievements
+
+-   POST
+    -   Permission: Everyone
+    -   Example Request Body:
+        ```
+        {
+            "uid": "XXXXXXXXXXXXXXX",
+            "unlocked_achievement_id": 123,
+        }
+        ```
+
+**/user-achievements/:id**
+
+-   GET
+
+    -   Permission: Admin, User **[Owner Only]**
+
+-   PUT & PATCH
+
+    -   Permission: Admin
+
+-   DELETE
+
+    -   Permission: Admin
+
+Example Response:
+
+```
+{
+    "user_achievement_id": 12,
+    "achievement_id": 123
+}
+```
+
+<hr>
+<p align='right'><a href='#dokudoku-backend-system'>Back to top</a></p>

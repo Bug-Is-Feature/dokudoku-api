@@ -24,11 +24,14 @@ class Migration(migrations.Migration):
                 ),
                 ("name", models.CharField(max_length=50, unique=True)),
                 ("description", models.TextField(blank=True, null=True)),
+                ("locked_thumbnail", models.TextField()),
+                ("unlocked_thumbnail", models.TextField()),
                 (
                     "condition",
                     models.CharField(
                         choices=[
                             ("BK_A", "Book Amount"),
+                            ("IB_A", "Incomplete Book Amount"),
                             ("T_RH", "Total Reading Hours"),
                             ("S_RH", "Stopwatch Reading Hours"),
                             ("H_RH", "Hourglass Reading Hours"),
