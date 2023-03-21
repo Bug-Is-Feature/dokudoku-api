@@ -6,6 +6,7 @@ class Achievement(models.Model):
 
     class UnlockCondition(models.TextChoices):
         BOOK_AMOUNT = 'BK_A', _('Book Amount')
+        INCOMPLETE_BOOK_AMOUNT = 'IB_A', _('Incomplete Book Amount')
         TOTAL_READING_HOUR = 'T_RH', _('Total Reading Hours')
         STOPWATCH_READING_HOUR = 'S_RH', _('Stopwatch Reading Hours')
         HOURGLASS_READING_HOUR = 'H_RH', _('Hourglass Reading Hours')

@@ -49,6 +49,7 @@
     - After download put it somewhere you desired, then copy the path
 1. Do the migration (make sure you're at the project root directory): `python manage.py migrate`
 1. Run the app: `python manage.py runserver`
+1. Load achievements data: `python manage.py loaddata achievements`
 
 ## Schema
 
@@ -590,7 +591,7 @@ Example Response:
 -   POST
     -   Permission: Admin
     -   Enum Types:
-        -   `condition`: ['Book Amount', 'Total Reading Hours', 'Stopwatch Reading Hours', 'Hourglass Reading Hours']
+        -   `condition`: ['Book Amount', 'Incomplete Book Amount', 'Total Reading Hours', 'Stopwatch Reading Hours', 'Hourglass Reading Hours']
     -   Example Request Body:
         ```
         {

@@ -31,6 +31,7 @@ class Migration(migrations.Migration):
                     models.CharField(
                         choices=[
                             ("BK_A", "Book Amount"),
+                            ("IB_A", "Incomplete Book Amount"),
                             ("T_RH", "Total Reading Hours"),
                             ("S_RH", "Stopwatch Reading Hours"),
                             ("H_RH", "Hourglass Reading Hours"),
