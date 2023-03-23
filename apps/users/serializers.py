@@ -6,7 +6,7 @@ from .models import User, UserAchievement
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = ('password')
+        exclude = ('password',)
         read_only_fields = ('date_joined',)
 
 class UserAchievementSerializer(serializers.ModelSerializer):

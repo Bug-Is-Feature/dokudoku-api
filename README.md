@@ -18,6 +18,7 @@
         -   [Session Routes](#session-routes)
         -   [Library Routes](#library-routes)
         -   [Library Books Routes](#library-books-routes)
+        -   [Achievement Group Routes](#achievement-group-routes)
         -   [Achievement Routes](#achievement-routes)
         -   [User Achievement Routes](#user-achievement-routes)
 
@@ -49,7 +50,7 @@
     - After download put it somewhere you desired, then copy the path
 1. Do the migration (make sure you're at the project root directory): `python manage.py migrate`
 1. Run the app: `python manage.py runserver`
-1. Load achievements data: `python manage.py loaddata achievements`
+1. Load achievements data: `python manage.py loaddata achievement_groups` then `python manage.py loaddata achievements`
 
 ## Schema
 
@@ -109,13 +110,20 @@
 -   Achievements (achievement)
 
     -   **PK**: id
+    -   name
     -   description
+    -   **FK** [Achivement Group]: group
     -   locked_thumbnail
     -   unlocked_thumbnail
     -   condition
     -   threshold
     -   available
     -   created_at
+
+-   Achievement Group (achievement_group)
+
+    -   **PK**: id
+    -   name
 
 -   User Achievements (user_achievement)
     -   **PK**: id
@@ -578,6 +586,48 @@ Example Response:
 
 <hr>
 
+### Achievement Group Routes
+
+**/achievement-groups**
+
+-   GET
+
+    -   Permission: Everyone
+
+-   POST
+    -   Permission: Admin
+    -   Example Request Body:
+        ```
+        {
+            "name": "achievement_group_name",
+        }
+        ```
+
+**/achievement-groups/:id**
+
+-   GET
+
+    -   Permission: Everyone
+
+-   PUT & PATCH
+
+    -   Permission: Admin
+
+-   DELETE
+
+    -   Permission: Admin
+
+Example Response:
+
+```
+{
+    "id": 12,
+    "name": "achievement_group_name"
+}
+```
+
+<hr>
+
 ### Achievement Routes
 
 **/achievements**
@@ -597,6 +647,7 @@ Example Response:
         {
             "name": "achievement",
             "description": "achievement_desc",
+            "group_id": 12,
             "locked_thumbnail": "locked_thumbnail",
             "unlocked_thumbnail": "unlocked_thumbnail",
             "condition": "Book Amount",
@@ -621,11 +672,16 @@ Example Response:
 
 Example Response:
 
+NOTE: if `group = null` then the achievement is **not belong to any group**.
+
 ```
 {
     "id": 1,
     "name": "achievement",
     "description": "achievement_description",
+    "group": {
+        ... Achievement Group Data ...
+    },
     "locked_thumbnail": "locked_thumbnail",
     "unlocked_thumbnail": "unlocked_thumbnail",
     "condition": "Hourglass Reading Hours',

@@ -2,6 +2,15 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
+class AchievementGroup(models.Model):
+    name = models.CharField(max_length=50, unique=True, null=False)
+
+    class Meta:
+        db_table = 'achievement_group'
+
+    def __str__(self):
+        return self.name
+
 class Achievement(models.Model):
 
     class UnlockCondition(models.TextChoices):
@@ -13,6 +22,7 @@ class Achievement(models.Model):
 
     name = models.CharField(max_length=50, unique=True, null=False)
     description = models.TextField(null=True, blank=True)
+    group = models.ForeignKey(AchievementGroup, on_delete=models.SET_NULL, null=True, db_index=True)
     locked_thumbnail = models.TextField()
     unlocked_thumbnail = models.TextField()
     condition = models.CharField(max_length=4, choices=UnlockCondition.choices, null=False)

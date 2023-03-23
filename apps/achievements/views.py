@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 
-from .models import Achievement
-from .serializers import AchievementSerializer
-from .permissions import AchievementPermission
+from .models import Achievement, AchievementGroup
+from .serializers import AchievementSerializer, AchievementGroupSerializer
+from .permissions import AchievementPermission, AchievementGroupPermission
 
 class AchievementViewSet(viewsets.ModelViewSet):
     queryset = Achievement.objects.all()
@@ -14,3 +14,8 @@ class AchievementViewSet(viewsets.ModelViewSet):
             return Achievement.objects.all()
         else:
             return Achievement.objects.filter(available=True)
+        
+class AchievementGroupViewSet(viewsets.ModelViewSet):
+    queryset = AchievementGroup.objects.all()
+    serializer_class = AchievementGroupSerializer
+    permission_classes = (AchievementGroupPermission,)
