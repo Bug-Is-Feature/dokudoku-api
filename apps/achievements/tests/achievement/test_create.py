@@ -16,6 +16,7 @@ class AchievementCreateTest(AchievementsAppTestSetUp):
         request = self.factory.post('/api/achievements/', {
             "name": "test_achievement_3",
             "description": "test_test",
+            "group_id": self.achievement_group_obj1.id,
             "locked_thumbnail": "test_locked_thumbnail",
             "unlocked_thumbnail": "test_unlocked_thumbnail",
             "condition": Achievement.UnlockCondition.HOURGLASS_READING_HOUR.label,
@@ -29,7 +30,9 @@ class AchievementCreateTest(AchievementsAppTestSetUp):
         self.assertTrue(Achievement.objects.filter(name='test_achievement_3').exists(),
                         'Expected `test_achievement_3` existed, but the achievement is not found.')
         self.assertTrue(Achievement.objects.count() == 3,
-                        f'Expected 3 objects found after successfully created.')
+                        'Expected 3 objects found after successfully created.')
+        self.assertEqual(response.data['group']['name'], self.achievement_group_obj1.name,
+                         f'Expected response group name = `{self.achievement_group_obj1.name}`, but the value is not correct.')
 
 class AchievementCreatePermissionTest(AchievementsAppTestSetUp):
 
@@ -56,4 +59,4 @@ class AchievementCreatePermissionTest(AchievementsAppTestSetUp):
         self.assertFalse(Achievement.objects.filter(name='test_achievement_4').exists(),
                         'Expected no achievement with name `test_achievement_3`, but the achievement created with out permission.')
         self.assertTrue(Achievement.objects.count() == 2,
-                        f'Expected only 2 objects existed in the system.')
+                        'Expected only 2 objects existed in the system.')
