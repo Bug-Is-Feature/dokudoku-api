@@ -13,6 +13,7 @@
     -   [Get JWT Token](#fetch-firebase-auth-token)
     -   [Backend API](#dokudoku-backend)
         -   [User Routes](#user-routes)
+        -   [User Admin Routes](#user-admin-routes)
         -   [Book Routes](#book-routes)
         -   [Author Routes](#author-routes)
         -   [Session Routes](#session-routes)
@@ -24,7 +25,7 @@
 
 ## Setting up the project locally
 
-1. Python 3.8 & Postgres 15 or later installed
+1. Python 3.9 & Postgres 15 or later installed
 1. Pipenv installed. Alternatively, you can install it by typing this in your CLI: `pip install pipenv`
 1. In the root directory, create a virtual environment: `pipenv shell`
 1. Install dependencies: `pipenv install`
@@ -38,6 +39,7 @@
     1. (optional) If you want to execute test files, you have to give CREATEDB privilege to user: `ALTER USER <YOUR DB USER> CREATEDB;`
 1. Setup .env file
     ```
+    export DEBUG = 'TRUE'
     export SECRET_KEY = 'django-insecure-<YOUR_DJANGO_SECRET_KEY>'
     export PSQL_DB_NAME = '<YOUR_DB_NAME>'
     export PSQL_DB_USER = '<YOUR_DB_USER>'
@@ -45,9 +47,11 @@
     export PSQL_DB_HOST = '<YOUR_DB_HOST>'
     export PSQL_DB_PORT = '<YOUR_DB_PORT>'
     export GOOGLE_APPLICATION_CREDENTIALS = '<YOUR_FIREBASE_ADMIN_SDK_PATH>'
+    export GOOGLE_APPLICATION_CREDENTIALS_BASE64 = '<YOUR_BASE64_ENCODED_FIREBASE_ADMIN_SDK>'
     ```
     - You can download firebase admin sdk from your firebase project site: `Project settings > Service accounts > Firebase Admin SDK > Generate new private key`
     - After download put it somewhere you desired, then copy the path
+    - If `DEBUG = 'FALSE'` the system will change Firebase Admin SDK from path to base64 encoded one (I use this method to avoid upload SDK to host when deploy)
 1. Do the migration (make sure you're at the project root directory): `python manage.py migrate`
 1. Run the app: `python manage.py runserver`
 1. Load achievements data: `python manage.py loaddata achievement_groups` then `python manage.py loaddata achievements`
@@ -171,6 +175,8 @@
 
 ### User Routes
 
+> Edit `is_admin` and delete admin accounts are not allowed in this route
+
 **/users**
 
 -   GET
@@ -200,6 +206,48 @@ Example Response:
     "email": "abc@abc.com",
     "current_lvl": 1,
     "current_exp": 0,
+    "is_admin": false,
+    "date_joined": "2023-01-13T05:09:28.617875+07:00"
+}
+```
+
+<hr>
+
+### User Admin Routes
+
+> Only `is_admin` are allowed for editing in this route
+
+**/user-admin**
+
+-   GET
+
+    -   Purpose: Get all admin in system
+    -   Permission: **Admin**
+
+**/user-admin/:id**
+
+-   GET
+
+    -   Purpose: Get specific admin by :id
+    -   Permission: **Admin**
+
+-   PATCH (Partial Update)
+
+    -   Purpose: Update user `is_admin` status only, other attribute are not allowed.
+    -   Permission: **Admin**
+
+-   DELETE
+
+    -   Purpose: Delete admin account
+    -   Permission: **Admin**
+
+Example Response:
+
+```
+{
+    "uid": "kM5cDAwpIiM7YXXXXXXXXXXXXXXX",
+    "last_login": "2023-01-13T05:09:28.617875+07:00",
+    "email": "abc@abc.com",
     "is_admin": false,
     "date_joined": "2023-01-13T05:09:28.617875+07:00"
 }

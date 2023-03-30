@@ -1,15 +1,22 @@
 import os
 import json
+import base64
 
-from apps.users.models import User
+from django.conf import settings
 from rest_framework import authentication
 from firebase_admin import auth, credentials, initialize_app
 from .exceptions import NoAuthToken, InvalidAuthToken, FirebaseError
 from dotenv import load_dotenv
 
+from apps.users.models import User
+
 load_dotenv()
-cred = credentials.Certificate(json.load(open(
-    os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'))))
+if settings.DEBUG:
+    cred = credentials.Certificate(json.load(open(
+        os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'))))
+else:
+    cred = credentials.Certificate(json.loads(base64.b64decode(
+        os.environ.get('GOOGLE_APPLICATION_CREDENTIALS_BASE64'))))
 default_app = initialize_app(cred)
 
 class FirebaseBackend(authentication.BaseAuthentication):

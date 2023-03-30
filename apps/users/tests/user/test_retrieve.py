@@ -20,7 +20,7 @@ class UserRetrieveTest(UsersAppTestSetUp):
         self.assertEqual(response.status_code, status.HTTP_200_OK,
             f'Expected http status 200, not {response.status_code}.')
         self.assertEqual(response.data['email'], 'admin@admin.com',
-            f'Expected `admin@admin.com` as title, not `{response.data["email"]}`.')
+            f'Expected `admin@admin.com` as email, not `{response.data["email"]}`.')
 
 class UserRetrievePermissionTest(UsersAppTestSetUp):
 
