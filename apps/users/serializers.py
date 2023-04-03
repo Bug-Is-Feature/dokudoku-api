@@ -30,7 +30,7 @@ class UserAdminSerializer(serializers.ModelSerializer):
         read_only_fields = ('date_joined',)
 
     def update(self, instance, validated_data):
-        if not settings.DEBUG:
+        if not settings.DEBUG and not settings.TESTING:
             update_status = validated_data.get('is_admin')
             if update_status == True:
                 try:

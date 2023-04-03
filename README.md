@@ -1,9 +1,21 @@
 # DokuDoku Backend System
 
+<p align='center'>
+    <img src='https://img.shields.io/badge/python-3.8%20|%203.9%20|%203.10-blue?logo=python&color=0064a5' />
+    <img src='https://img.shields.io/badge/django-4.2-green?logo=django&color=092e20' />
+    <img src='https://img.shields.io/badge/postgresql-15-green?logo=postgresql&color=336791' />
+</p>
+
 ## About the Project
 
--   DokuDoku is a junior project of software engineering courses (KMUTT, CSS321 & CSS322)
+-   DokuDoku is a project of software engineering courses (KMUTT, CSS321 & CSS322)
 -   It's setup to use with flutter mobile application named [DokuDoku](https://github.com/Bug-Is-Feature/DokuDoku)
+
+## Disclaimer
+
+-   This project did not implement with Django Authentication but use Firebase Authentication instead.
+-   This project is built to deploy on [Render](https://render.com), you may need to edit the `/config/settings.py` file if you desire to deploy elsewhere.
+-   Please be aware that this project is based on DokuDoku use cases, any use cases that are not mentioned in documentation may cause errors.
 
 ## Table of Contents
 
@@ -23,7 +35,7 @@
         -   [Achievement Routes](#achievement-routes)
         -   [User Achievement Routes](#user-achievement-routes)
 
-## Setting up the project locally
+## Setting up the project
 
 1. Python 3.9 & Postgres 15 or later installed
 1. Pipenv installed. Alternatively, you can install it by typing this in your CLI: `pip install pipenv`
@@ -39,19 +51,20 @@
     1. (optional) If you want to execute test files, you have to give CREATEDB privilege to user: `ALTER USER <YOUR DB USER> CREATEDB;`
 1. Setup .env file
     ```
-    export DEBUG = 'TRUE'
-    export SECRET_KEY = 'django-insecure-<YOUR_DJANGO_SECRET_KEY>'
-    export PSQL_DB_NAME = '<YOUR_DB_NAME>'
-    export PSQL_DB_USER = '<YOUR_DB_USER>'
-    export PSQL_DB_USER_PWD = '<YOURE_DB_USER_PASSWORD>'
-    export PSQL_DB_HOST = '<YOUR_DB_HOST>'
-    export PSQL_DB_PORT = '<YOUR_DB_PORT>'
-    export GOOGLE_APPLICATION_CREDENTIALS = '<YOUR_FIREBASE_ADMIN_SDK_PATH>'
-    export GOOGLE_APPLICATION_CREDENTIALS_BASE64 = '<YOUR_BASE64_ENCODED_FIREBASE_ADMIN_SDK>'
+    export DEBUG = TRUE
+    export SECRET_KEY = django-insecure-<YOUR_DJANGO_SECRET_KEY>
+    export PSQL_DB_NAME = <YOUR_DB_NAME>
+    export PSQL_DB_USER = <YOUR_DB_USER>
+    export PSQL_DB_USER_PWD = <YOURE_DB_USER_PASSWORD>
+    export PSQL_DB_HOST = <YOUR_DB_HOST>
+    export PSQL_DB_PORT = <YOUR_DB_PORT>
+    export EXTERNAL_PSQL_URL = <YOUR_CLOUD_DB_URL>
+    export GOOGLE_APPLICATION_CREDENTIALS_BASE64 = <YOUR_BASE64_ENCODED_FIREBASE_ADMIN_SDK>
     ```
-    - You can download firebase admin sdk from your firebase project site: `Project settings > Service accounts > Firebase Admin SDK > Generate new private key`
-    - After download put it somewhere you desired, then copy the path
-    - If `DEBUG = 'FALSE'` the system will change Firebase Admin SDK from path to base64 encoded one (I use this method to avoid upload SDK to host when deploy)
+    - You can download firebase admin sdk from your firebase project site: `Project settings > Service accounts > Firebase Admin SDK > Generate new private key`.
+    - After download encode it to [base64](https://www.base64encode.org/), `REMINDER:` this encoded text still considered a secret.
+    - `EXTERNAL_PSQL_URL` is not necessary if you only run with **DEBUG = TRUE**.
+    - If `DEBUG = FALSE` the database will change to deployed PostgreSQL (External URL), you can change this behavior by edit code at `/config/settings.py line: 101-117`.
 1. Do the migration (make sure you're at the project root directory): `python manage.py migrate`
 1. Run the app: `python manage.py runserver`
 1. Load achievements data: `python manage.py loaddata achievement_groups` then `python manage.py loaddata achievements`
