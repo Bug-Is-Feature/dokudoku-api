@@ -1,0 +1,182 @@
+[
+    {
+        "model": "achievements.Achievement",
+        "pk": 1,
+        "fields": {
+            "name": "Lord of Tsundoku I",
+            "description": "That is an unfinished pile of books. \"Just seeing it makes Meow sleepy.\"",
+            "group": 1,
+            "locked_thumbnail": "gs::achievement_icon/lock_lord_of_tsundoku_1.png",
+            "unlocked_thumbnail": "gs::achievement_icon/unlock_lord_of_tsundoku_1.png",
+            "condition": "IB_A",
+            "threshold": 5,
+            "available": true,
+            "created_at": "2023-03-21T16:25:00.000+07:00"
+        }
+    },
+    {
+        "model": "achievements.Achievement",
+        "pk": 2,
+        "fields": {
+            "name": "Lord of Tsundoku II",
+            "description": "Pile of unfinished books keep increasing without meow noticed and my pocket Money is empty meow.",
+            "group": 1,
+            "locked_thumbnail": "gs::achievement_icon/lock_lord_of_tsundoku_2.png",
+            "unlocked_thumbnail": "gs::achievement_icon/unlock_lord_of_tsundoku_2.png",
+            "condition": "IB_A",
+            "threshold": 10,
+            "available": true,
+            "created_at": "2023-03-21T16:25:00.000+07:00"
+        }
+    },
+    {
+        "model": "achievements.Achievement",
+        "pk": 3,
+        "fields": {
+            "name": "Lord of Tsundoku III",
+            "description": "Breathe in.. Breathe out.. slowly. There would be a day where meow could finish all unread books.",
+            "group": 1,
+            "locked_thumbnail": "gs::achievement_icon/lock_lord_of_tsundoku_3.png",
+            "unlocked_thumbnail": "gs::achievement_icon/unlock_lord_of_tsundoku_3.png",
+            "condition": "IB_A",
+            "threshold": 20,
+            "available": true,
+            "created_at": "2023-03-21T16:25:00.000+07:00"
+        }
+    },
+    {
+        "model": "achievements.Achievement",
+        "pk": 4,
+        "fields": {
+            "name": "Meow's training I",
+            "description": "This cat is practising for reading competitions. 3 2 1 Start!",
+            "group": 2,
+            "locked_thumbnail": "gs::achievement_icon/lock_meow_training_1.png",
+            "unlocked_thumbnail": "gs::achievement_icon/unlock_meow_training_1.png",
+            "condition": "S_RH",
+            "threshold": 2,
+            "available": true,
+            "created_at": "2023-03-21T16:25:00.000+07:00"
+        }
+    },
+    {
+        "model": "achievements.Achievement",
+        "pk": 5,
+        "fields": {
+            "name": "Meow's training II",
+            "description": "This cat start to familiar with a training, Meow doing better than before!",
+            "group": 2,
+            "locked_thumbnail": "gs::achievement_icon/lock_meow_training_2.png",
+            "unlocked_thumbnail": "gs::achievement_icon/unlock_meow_training_2.png",
+            "condition": "S_RH",
+            "threshold": 6,
+            "available": true,
+            "created_at": "2023-03-21T16:25:00.000+07:00"
+        }
+    },
+    {
+        "model": "achievements.Achievement",
+        "pk": 6,
+        "fields": {
+            "name": "Meow's training III",
+            "description": "This cat has compete in competition with past selves. Look at how much meow improve.",
+            "group": 2,
+            "locked_thumbnail": "gs::achievement_icon/lock_meow_training_3.png",
+            "unlocked_thumbnail": "gs::achievement_icon/unlock_meow_training_3.png",
+            "condition": "S_RH",
+            "threshold": 12,
+            "available": true,
+            "created_at": "2023-03-21T16:25:00.000+07:00"
+        }
+    },
+    {
+        "model": "achievements.Achievement",
+        "pk": 7,
+        "fields": {
+            "name": "Determined Meow I",
+            "description": "I will become a cat who surely won't sleep before break time.",
+            "group": 3,
+            "locked_thumbnail": "gs::achievement_icon/lock_determined_meow_1.png",
+            "unlocked_thumbnail": "gs::achievement_icon/unlock_determined_meow_1.png",
+            "condition": "H_RH",
+            "threshold": 2,
+            "available": true,
+            "created_at": "2023-03-21T16:25:00.000+07:00"
+        }
+    },
+    {
+        "model": "achievements.Achievement",
+        "pk": 8,
+        "fields": {
+            "name": "Determined Meow II",
+            "description": "The determination of this cat makes it rarely sleep while it's reading a book.",
+            "group": 3,
+            "locked_thumbnail": "gs::achievement_icon/lock_determined_meow_2.png",
+            "unlocked_thumbnail": "gs::achievement_icon/unlock_determined_meow_2.png",
+            "condition": "H_RH",
+            "threshold": 6,
+            "available": true,
+            "created_at": "2023-03-21T16:25:00.000+07:00"
+        }
+    },
+    {
+        "model": "achievements.Achievement",
+        "pk": 9,
+        "fields": {
+            "name": "Determined Meow III",
+            "description": "The cat doesn't feel sleepy at all when it starts reading, so this is the result of working hard.",
+            "group": 3,
+            "locked_thumbnail": "gs::achievement_icon/lock_determined_meow_3.png",
+            "unlocked_thumbnail": "gs::achievement_icon/unlock_determined_meow_3.png",
+            "condition": "H_RH",
+            "threshold": 12,
+            "available": true,
+            "created_at": "2023-03-21T16:25:00.000+07:00"
+        }
+    },
+    {
+        "model": "achievements.Achievement",
+        "pk": 10,
+        "fields": {
+            "name": "Skilled Cat I",
+            "description": "If you want to be better at reading, you should try reading more and think about it Meow.",
+            "group": 4,
+            "locked_thumbnail": "gs::achievement_icon/lock_skilled_cat_1.png",
+            "unlocked_thumbnail": "gs::achievement_icon/unlock_skilled_cat_1.png",
+            "condition": "T_RH",
+            "threshold": 10,
+            "available": true,
+            "created_at": "2023-03-21T16:25:00.000+07:00"
+        }
+    },
+    {
+        "model": "achievements.Achievement",
+        "pk": 11,
+        "fields": {
+            "name": "Skilled Cat II",
+            "description": "Meow know that meow want to start reading a book, just reading don't overthinking.",
+            "group": 4,
+            "locked_thumbnail": "gs::achievement_icon/lock_skilled_cat_2.png",
+            "unlocked_thumbnail": "gs::achievement_icon/unlock_skilled_cat_2.png",
+            "condition": "T_RH",
+            "threshold": 20,
+            "available": true,
+            "created_at": "2023-03-21T16:25:00.000+07:00"
+        }
+    },
+    {
+        "model": "achievements.Achievement",
+        "pk": 12,
+        "fields": {
+            "name": "Skilled Cat III",
+            "description": "I am a cat who has a rich experience in reading, praise this great meow.",
+            "group": 4,
+            "locked_thumbnail": "gs::achievement_icon/lock_skilled_cat_3.png",
+            "unlocked_thumbnail": "gs::achievement_icon/unlock_skilled_cat_3.png",
+            "condition": "T_RH",
+            "threshold": 30,
+            "available": true,
+            "created_at": "2023-03-21T16:25:00.000+07:00"
+        }
+    }
+]
