@@ -5,6 +5,14 @@
     <img src='https://img.shields.io/badge/django-4.2-green?logo=django&color=092e20' />
     <img src='https://img.shields.io/badge/postgresql-15-green?logo=postgresql&color=336791' />
 </p>
+<p align='center'>
+    <a href='https://github.com/Bug-Is-Feature/dokudoku-api/actions/workflows/django.yml'>
+        <img src='https://github.com/Bug-Is-Feature/dokudoku-api/actions/workflows/django.yml/badge.svg?branch=main' />
+    </a>
+    <a href="https://codecov.io/gh/Bug-Is-Feature/dokudoku-api" > 
+        <img src="https://codecov.io/gh/Bug-Is-Feature/dokudoku-api/branch/main/graph/badge.svg?token=KX285P8G80"/> 
+    </a>
+</p>
 
 ## About the Project
 
