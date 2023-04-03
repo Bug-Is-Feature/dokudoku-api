@@ -4,12 +4,15 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+coverage = "*"
 django = "*"
 djangorestframework = "*"
+dj-database-url = "*"
 firebase-admin = "*"
-psycopg2 = "*"
-python-dotenv = "*"
+gunicorn = "*"
 iso4217 = "*"
+psycopg2-binary = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
