@@ -3,6 +3,24 @@
 import os
 import sys
 
+import string
+import spacy
+from spacy.lang.en import English
+from spacy.lang.en.stop_words import STOP_WORDS
+
+def spacy_tokenizer(sentence):
+    punctuations = string.punctuation
+
+    nlp = spacy.load('en_core_web_sm')
+    stop_words = STOP_WORDS
+
+    parser = English()
+
+    mytokens = parser(nlp(sentence))
+    mytokens = [ word.lemma_.lower().strip() if word.lemma_ != "-PRON-" else word.lower_ for word in mytokens ]
+    mytokens = [ word for word in mytokens if word not in stop_words and word not in punctuations ]
+
+    return mytokens
 
 def main():
     """Run administrative tasks."""

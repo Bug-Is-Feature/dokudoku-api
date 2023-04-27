@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'apps.reading_sessions',
     'apps.library',
     'apps.achievements',
+    'apps.recommender',
 ]
 
 MIDDLEWARE = [

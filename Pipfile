@@ -13,6 +13,9 @@ gunicorn = "*"
 iso4217 = "*"
 psycopg2-binary = "*"
 python-dotenv = "*"
+spacy = "*"
+pandas = "*"
+scikit-learn = "*"
 
 [dev-packages]
 

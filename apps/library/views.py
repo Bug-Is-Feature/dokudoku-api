@@ -30,6 +30,8 @@ class LibraryViewSet(viewsets.ModelViewSet):
             if self.request.user.is_admin:
                 return Library.objects.all()
             else:
+                if not Library.objects.filter(created_by=self.request.user).exists():
+                    Library.objects.create(created_by=self.request.user)
                 return Library.objects.filter(created_by=self.request.user)
 
 class LibraryBookViewSet(viewsets.ModelViewSet):

@@ -47,3 +47,24 @@ class LibraryListTest(LibraryAppTestSetUp):
             'Expected to get user\'s library data, but the response is not right.')
         self.assertTrue(len(response.data) == 1,
             f'Expected only one library from user view, not {len(response.data)}.')
+        
+    def test_library_list_auto_create(self):
+        '''
+        Simulate a user trying to fetch their library in the system
+        but the library is not exist
+
+        System will automatically create library and their library should return as response
+        '''
+        request = self.factory.get('/api/library/')
+        force_authenticate(request, user=self.user2)
+        response = LibraryViewSet.as_view({'get': 'list'})(request)
+
+        library = Library.objects.filter(created_by=self.user2.uid)
+        serializers = LibrarySerializer(library, many=True)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK,
+            f'Expected http status 200, not {response.status_code}.')
+        self.assertEqual(response.data, serializers.data,
+            'Expected to get user\'s library data, but the response is not right.')
+        self.assertTrue(len(response.data) == 1,
+            f'Expected only one library from user view, not {len(response.data)}.')

@@ -28,6 +28,7 @@
         -   [User Admin Routes](#user-admin-routes)
         -   [Book Routes](#book-routes)
         -   [Author Routes](#author-routes)
+        -   [Book Recommender Routes](#book-recommender-routes)
         -   [Session Routes](#session-routes)
         -   [Library Routes](#library-routes)
         -   [Library Books Routes](#library-books-routes)
@@ -460,6 +461,33 @@ Example Response:
 
 <hr>
 
+### Book Recommender Routes
+
+**/recommendation**
+
+-   GET
+
+    -   NOTE: This route only recommend based-on incomplete book in library and user's most read book, if user have no session or incomplete book in the system then `status: 404` will return as response.
+    -   Permission: Everyone
+
+Example Response:
+
+```
+[
+    {
+        ... Book Data ...
+    },
+    {
+        ... Book Data ...
+    },
+    {
+        ... Book Data ...
+    }
+]
+```
+
+<hr>
+
 ### Session Routes
 
 **/sessions**
@@ -706,6 +734,7 @@ Example Response:
     -   Example Request Body:
         ```
         {
+            "id": 1,
             "name": "achievement",
             "description": "achievement_desc",
             "group_id": 12,

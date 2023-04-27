@@ -16,7 +16,7 @@ class AchievementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Achievement
         fields = (
-            'name', 'description', 'locked_thumbnail', 'unlocked_thumbnail',
+            'id', 'name', 'description', 'locked_thumbnail', 'unlocked_thumbnail',
             'condition', 'threshold', 'available', 'group', 'group_id',
         )
         extra_kwargs = {
