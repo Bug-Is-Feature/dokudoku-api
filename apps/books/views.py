@@ -2,6 +2,7 @@ from django.core.exceptions import FieldError
 from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import viewsets
 
+from apps.library.models import Library
 from .models import Author, Book
 from .serializers import AuthorSerializer, BookSerializer
 from .permissions import AuthorPermission, BookPermission
@@ -38,3 +39,11 @@ class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
     permission_classes = (AuthorPermission,)
+
+    def destroy(self, request, *args, **kwargs):
+        response = super().destroy(request, *args, **kwargs)
+        library = Library.objects.get(created_by=request.user)
+        if not library.is_changed:
+                library.is_changed = True
+                library.save()
+        return response

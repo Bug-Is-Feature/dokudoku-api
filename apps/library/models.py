@@ -7,6 +7,7 @@ from apps.users.models import User
 class Library(models.Model):
     created_by = models.OneToOneField(User, on_delete=models.CASCADE, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_changed = models.BooleanField(default=True)
 
     class Meta:
         db_table = 'user_library'

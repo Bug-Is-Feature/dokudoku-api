@@ -2,6 +2,7 @@ import uuid
 
 from rest_framework.test import APITestCase, APIRequestFactory
 
+from apps.library.models import Library, LibraryBook
 from apps.users.models import User
 from ..models import Author, Book
 
@@ -46,3 +47,22 @@ class BooksAppTestSetUp(APITestCase):
             book=self.book_obj2, name='test_book_2_author_1')
         self.author_obj3 = Author.objects.create(
             book=self.book_obj2, name='test_book_2_author_2')
+        
+        self.library_obj1 = Library.objects.create(
+            created_by=self.admin,
+            is_changed=False
+        )
+        self.library_obj2 = Library.objects.create(
+            created_by=self.user,
+            is_changed=False
+        )
+        self.library_book_obj1 = LibraryBook.objects.create(
+            library=self.library_obj1,
+            book=self.book_obj1,
+            is_completed=False,
+        )
+        self.library_book_obj2 = LibraryBook.objects.create(
+            library=self.library_obj2,
+            book=self.book_obj2,
+            is_completed=False,
+        )

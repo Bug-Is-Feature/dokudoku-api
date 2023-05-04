@@ -9,7 +9,7 @@ class BookPageCountValidatorTest(BooksAppTestSetUp):
 
     def test_book_validator_invalid_page_count_type(self):
         '''
-        Simulate a user trying to create a book
+        Simulate an admin trying to create a book
         but passing invalid page_count as attribute (not int)
         
         An error message should return as response
@@ -20,7 +20,7 @@ class BookPageCountValidatorTest(BooksAppTestSetUp):
             "price": 100.0,
             "google_book_id": "123456789012"
         }, format='json')
-        force_authenticate(request, user=self.user)
+        force_authenticate(request, user=self.admin)
         response = BookViewSet.as_view({'post': 'create'})(request)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST,
@@ -30,7 +30,7 @@ class BookPageCountValidatorTest(BooksAppTestSetUp):
 
     def test_book_validator_negative_page_count(self):
         '''
-        Simulate a user trying to create a book
+        Simulate an admin trying to create a book
         but passing invalid page_count as attribute (negative int)
         
         An error message should return as response
@@ -41,7 +41,7 @@ class BookPageCountValidatorTest(BooksAppTestSetUp):
             "price": 100.0,
             "google_book_id": "123456789012"
         }, format='json')
-        force_authenticate(request, user=self.user)
+        force_authenticate(request, user=self.admin)
         response = BookViewSet.as_view({'post': 'create'})(request)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST,
@@ -53,7 +53,7 @@ class BookCurrencyCodeValidatorTest(BooksAppTestSetUp):
 
     def test_book_validator_invalid_iso4217(self):
         '''
-        Simulate a user trying to create a book
+        Simulate an admin trying to create a book
         but passing invalid currency_code as attribute (not ISO 4217)
         
         An error message should return as response
@@ -65,7 +65,7 @@ class BookCurrencyCodeValidatorTest(BooksAppTestSetUp):
             "price": 100.0,
             "google_book_id": "123456789012"
         }, format='json')
-        force_authenticate(request, user=self.user)
+        force_authenticate(request, user=self.admin)
         response = BookViewSet.as_view({'post': 'create'})(request)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST,
@@ -77,7 +77,7 @@ class BookPriceValidatorTest(BooksAppTestSetUp):
 
     def test_book_validator_invalid_price_type(self):
         '''
-        Simulate a user trying to create a book
+        Simulate an admin trying to create a book
         but passing invalid price as attribute (not int)
         
         An error message should return as response
@@ -88,7 +88,7 @@ class BookPriceValidatorTest(BooksAppTestSetUp):
             "price": "100",
             "google_book_id": "123456789012"
         }, format='json')
-        force_authenticate(request, user=self.user)
+        force_authenticate(request, user=self.admin)
         response = BookViewSet.as_view({'post': 'create'})(request)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST,
@@ -98,7 +98,7 @@ class BookPriceValidatorTest(BooksAppTestSetUp):
 
     def test_book_validator_negative_price(self):
         '''
-        Simulate a user trying to create a book
+        Simulate an admin trying to create a book
         but passing invalid price as attribute (negative int)
         
         An error message should return as response
@@ -109,7 +109,7 @@ class BookPriceValidatorTest(BooksAppTestSetUp):
             "price": -100.0,
             "google_book_id": "123456789012"
         }, format='json')
-        force_authenticate(request, user=self.user)
+        force_authenticate(request, user=self.admin)
         response = BookViewSet.as_view({'post': 'create'})(request)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST,
@@ -121,7 +121,7 @@ class BookGoogleBookIdValidatorTest(BooksAppTestSetUp):
 
     def test_book_validator_google_book_id(self):
         '''
-        Simulate a user trying to create a book
+        Simulate an admin trying to create a book
         but passing invalid google_book_id as attribute (string length != 12)
         
         An error message should return as response
@@ -132,7 +132,7 @@ class BookGoogleBookIdValidatorTest(BooksAppTestSetUp):
             "price": 100.0,
             "google_book_id": "1234567890"
         }, format='json')
-        force_authenticate(request, user=self.user)
+        force_authenticate(request, user=self.admin)
         response = BookViewSet.as_view({'post': 'create'})(request)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST,

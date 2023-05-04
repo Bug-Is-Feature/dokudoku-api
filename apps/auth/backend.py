@@ -12,7 +12,9 @@ from apps.users.models import User
 load_dotenv()
 cred = credentials.Certificate(json.loads(base64.b64decode(
         os.environ.get('GOOGLE_APPLICATION_CREDENTIALS_BASE64'))))
-default_app = initialize_app(cred)
+default_app = initialize_app(cred, {
+    'storageBucket': os.environ.get('FIREBASE_BUCKET_NAME')
+})
 
 class FirebaseBackend(authentication.BaseAuthentication):
     def authenticate(self, request):

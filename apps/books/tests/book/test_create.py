@@ -26,7 +26,7 @@ class BookCreateTest(BooksAppTestSetUp):
                 }
             ]
         }, format='json')
-        force_authenticate(request, user=self.user)
+        force_authenticate(request, user=self.admin)
         response = BookViewSet.as_view({'post': 'create'})(request)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED,
@@ -64,7 +64,7 @@ class BookCreateTest(BooksAppTestSetUp):
 
     def test_book_create_forbidden_action(self):
         '''
-        Simulate a user trying to create a book
+        Simulate an admin trying to create a book
         but passing both 2 attributes (uid, google_book_id) 
         which is not allowed
 
@@ -87,10 +87,39 @@ class BookCreateTest(BooksAppTestSetUp):
                 }
             ]
         }, format='json')
+        force_authenticate(request, user=self.admin)
+        response = BookViewSet.as_view({'post': 'create'})(request)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST,
+            f'Expected http status 403, not {response.status_code}.')
+        self.assertFalse(Book.objects.filter(title='test_book_title').exists(),
+            'Expected no book with title `test_book_title`, but the book created with out permission.')
+        
+class BookCreatePermissionTest(BooksAppTestSetUp):
+
+    def test_book_create_no_permission(self):
+        '''
+        Simulate a user trying to create a book
+        which is not allowed (user need to user /library-books path)
+
+        An error message should return as response
+        '''
+        request = self.factory.post('/api/books/', {
+            "title": "test_book_title",
+            "page_count": 134,
+            "currency_code": "THB",
+            "price": 100,
+            "uid": self.user.uid,
+            "authors": [
+                {
+                    "name": "test_book_author"
+                }
+            ]
+        }, format='json')
         force_authenticate(request, user=self.user)
         response = BookViewSet.as_view({'post': 'create'})(request)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN,
             f'Expected http status 403, not {response.status_code}.')
         self.assertFalse(Book.objects.filter(title='test_book_title').exists(),
-            'Expected no book with title `test_book_title`, but the book created with out permission.')
+            'Expected no book with title `test_book_title` exist.')

@@ -1,0 +1,7 @@
+.env.sample
+.venv
+.git
+.gitignore
+
+.Pipfile
+.Pipfile.lock

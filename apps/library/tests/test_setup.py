@@ -37,10 +37,12 @@ class LibraryAppTestSetUp(APITestCase):
             google_book_id='ed77c79706c3',
         )
         self.library_obj1 = Library.objects.create(
-            created_by=self.admin
+            created_by=self.admin,
+            is_changed=False
         )
         self.library_obj2 = Library.objects.create(
-            created_by=self.user1
+            created_by=self.user1,
+            is_changed=False
         )
         self.library_book_obj1 = LibraryBook.objects.create(
             library=self.library_obj1,

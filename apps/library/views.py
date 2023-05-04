@@ -68,11 +68,20 @@ class LibraryBookViewSet(viewsets.ModelViewSet):
                 return LibraryBook.objects.filter(library=library)
 
     def destroy(self, request, *args, **kwargs):
+        library = Library.objects.get(created_by=request.user)
         library_book = self.get_object()
         book = get_object_or_404(Book.objects.filter(id=library_book.book.id))
         if book.created_by and book.created_by == request.user:
+            # delete book will cascade library_book, if not use _ then the delete() is not trigger
             _ = Book.objects.filter(id=book.id).delete()
+            if not library.is_changed:
+                library.is_changed = True
+                library.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
-
-        return super().destroy(request, *args, **kwargs)
+        
+        response = super().destroy(request, *args, **kwargs)
+        if not library.is_changed:
+            library.is_changed = True
+            library.save()
+        return response
         

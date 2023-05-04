@@ -12,15 +12,7 @@ class BookPermission(permissions.BasePermission):
             else:
                 return True
         elif view.action == 'create':
-            body = json.loads(request.body)
-            if 'uid' in body.keys() and 'google_book_id' in body.keys():
-                self.message = 'Request body with google_book_id and uid is not allowed, only one attribute can exist.'
-                return False
-            elif 'uid' in body.keys():
-                self.message = f'You do not have permission to create book for user: {body["uid"]}'
-                return body['uid'] == str(request.user) or request.user.is_admin
-            else:
-                return True
+            return request.user.is_admin
         elif view.action in ['retrieve', 'update', 'partial_update', 'destroy']:
             return True
         else:
@@ -39,7 +31,7 @@ class BookPermission(permissions.BasePermission):
                 return request.user.is_admin
             return obj.created_by == request.user or request.user.is_admin
         elif view.action == 'destroy':
-            return obj.created_by == request.user or request.user.is_admin
+            return request.user.is_admin
         else:
             return False
 

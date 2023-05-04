@@ -60,6 +60,7 @@
     export PSQL_DB_HOST = <YOUR_DB_HOST>
     export PSQL_DB_PORT = <YOUR_DB_PORT>
     export EXTERNAL_PSQL_URL = <YOUR_CLOUD_DB_URL>
+    export FIREBASE_BUCKET_NAME = <YOUR_FIREABSE_BUCKET_NAME>
     export GOOGLE_APPLICATION_CREDENTIALS_BASE64 = <YOUR_BASE64_ENCODED_FIREBASE_ADMIN_SDK>
     ```
     - You can download firebase admin sdk from your firebase project site: `Project settings > Service accounts > Firebase Admin SDK > Generate new private key`.
@@ -116,6 +117,7 @@
     -   **PK**: id
     -   **FK** [User]: created_by
     -   created_at
+    -   is_changed
 
 -   LibraryBook (library_book)
 
@@ -281,7 +283,7 @@ Custom book will have non-null created_by and null google_book_id, vice versa.
 
     -   Permission:
         -   Admin: Fetch all books
-        -   User: Fetch all their own custom books
+        -   User: Fetch all their own **custom books**
     -   Query Parameter (**can only use 1 parameter per request**)
         -   **ggbookid**: Filter by Google Book ID
             -   Permission: Everyone
@@ -290,9 +292,7 @@ Custom book will have non-null created_by and null google_book_id, vice versa.
 
 -   POST
 
-    -   Permission:
-        -   Google Book: Everyone can create
-        -   Custom Book: Admin, User **[Owner Only]**
+    -   Permission: Admin Only (User NEED to use [/library-books](#library-books-routes) route to create book)
     -   Example Request Body (**Custom Book**): DO NOT INCLUDE google_book_id
         ```
         {
@@ -347,9 +347,7 @@ Custom book will have non-null created_by and null google_book_id, vice versa.
         -   Custom Book: Admin, User **[Owner Only]**
 
 -   DELETE
-    -   Permission:
-        -   Google Book: Admin
-        -   Custom Book: Admin, User **[Owner Only]**
+    -   Permission: Admin Only (User NEED to use [/library-books](#library-books-routes) route to delete book)
 
 Example **Custom Book** Response:
 
@@ -467,7 +465,8 @@ Example Response:
 
 -   GET
 
-    -   NOTE: This route only recommend based-on incomplete book in library and user's most read book, if user have no session or incomplete book in the system then `status: 404` will return as response.
+    -   NOTE: This route only recommend based-on incomplete book in library and user's most read book, if user have no session system will consider user's first added book to be a target.
+    -   NOTE 2: Recommendation result is store as file on cloud and update daily with cronjob (new user need to wait for the next day), if user have less than 2 **incomplete** books at the end of the day the result will not update or create.
     -   Permission: Everyone
 
 Example Response:
