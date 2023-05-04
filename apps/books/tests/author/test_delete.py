@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.test import force_authenticate
 
+from apps.library.models import Library
 from ..test_setup import BooksAppTestSetUp
 from ...models import Author
 from ...views import AuthorViewSet
@@ -21,6 +22,8 @@ class AuthorDeleteTest(BooksAppTestSetUp):
             f'Expected http status 204, not {response.status_code}.')
         self.assertFalse(Author.objects.filter(id=self.author_obj3.id).exists(),
             f'Expected no author with id `{self.author_obj3.id}` still exist.')
+        self.assertTrue(Library.objects.get(created_by=self.admin).is_changed,
+            'Expected library is_changed = `True`, but the value is not right.')
 
 class AuthorDeletePermissionTest(BooksAppTestSetUp):
 
@@ -39,3 +42,5 @@ class AuthorDeletePermissionTest(BooksAppTestSetUp):
             f'Expected http status 403, not {response.status_code}.')
         self.assertTrue(Author.objects.filter(id=self.author_obj3.id).exists(),
             f'Expected author with id `{self.author_obj3.id}` still exist, but the object got deleted.')
+        self.assertFalse(Library.objects.get(created_by=self.user).is_changed,
+            'Expected library is_changed = `False`, but the value is not right.')

@@ -14,12 +14,18 @@ class LibraryBookCreateTest(LibraryAppTestSetUp):
 
         A response should return with newly created library_book
         '''
-        book = self.book_obj2.__dict__
+        book = Book.objects.create(
+            title='test_book_3',
+            page_count=234,
+            currency_code='THB',
+            price=750,
+            created_by=self.user1,
+        ).__dict__
         book.pop('_state')
         request = self.factory.post('/api/library-books', {
             "book_data": book,
         }, format='json')
-        force_authenticate(request, user=self.user2)
+        force_authenticate(request, user=self.user1)
         response = LibraryBookViewSet.as_view({'post': 'create'})(request)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED,
@@ -72,6 +78,8 @@ class LibraryBookCreateTest(LibraryAppTestSetUp):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED,
             f'Expected http status 201, not {response.status_code}.')
+        self.assertTrue(Library.objects.get(created_by=self.user1).is_changed,
+            'Expected library is_changed = `True`, but the value is not right.')
         created_book = Book.objects.filter(title='test_library_book_create')
         self.assertTrue(created_book.exists(),
             'Expected book with title `test_library_book_create` created automatically, but the book is not found.')
@@ -100,5 +108,7 @@ class LibraryBookCreatePermissionTest(LibraryAppTestSetUp):
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN,
             f'Expected http status 403, not {response.status_code}.')
+        self.assertFalse(Library.objects.get(created_by=self.user1).is_changed,
+            'Expected library is_changed = `False`, but the value is not right.')
         self.assertFalse(LibraryBook.objects.count() > 2,
             f'Expected only 2 library_book exist, not {LibraryBook.objects.count()}.')

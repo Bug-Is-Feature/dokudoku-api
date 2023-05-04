@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.test import force_authenticate
 
+from apps.library.models import Library
 from ..test_setup import LibraryAppTestSetUp
 from ...models import LibraryBook
 from ...views import LibraryBookViewSet
@@ -23,6 +24,8 @@ class LibraryBookUpdateTest(LibraryAppTestSetUp):
             f'Expected http status 200, not {response.status_code}.')
         self.assertTrue(LibraryBook.objects.get(id=self.library_book_obj1.id).is_completed,
             f'Expected updated data has is_completed = `{True}`, but the value is not right.')
+        self.assertTrue(Library.objects.get(created_by=self.admin).is_changed,
+            'Expected library is_changed = `True`, but the value is not right.')
 
     def test_library_book_update_forbidden_attribute(self):
         '''
@@ -43,6 +46,8 @@ class LibraryBookUpdateTest(LibraryAppTestSetUp):
             f'Expected http status 403, not {response.status_code}.')
         self.assertEqual(LibraryBook.objects.get(id=self.library_book_obj2.id).book, self.book_obj2,
             'Expected no change when update with forbidden attribute, but the value is changed.')
+        self.assertFalse(Library.objects.get(created_by=self.user1).is_changed,
+            'Expected library is_changed = `False`, but the value is not right.')
 
 class LibraryBookUpdatePermissionTest(LibraryAppTestSetUp):
 
@@ -63,3 +68,5 @@ class LibraryBookUpdatePermissionTest(LibraryAppTestSetUp):
             f'Expected http status 404, not {response.status_code}.')
         self.assertFalse(LibraryBook.objects.get(id=self.library_book_obj1.id).is_completed,
             f'Expected no change on library_book with id `{self.library_book_obj1.id}`, but the value is changed.')
+        self.assertFalse(Library.objects.get(created_by=self.admin).is_changed,
+            'Expected library is_changed = `False`, but the value is not right.')

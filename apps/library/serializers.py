@@ -17,7 +17,7 @@ class LibraryBookSerializer(serializers.ModelSerializer):
         read_only_fields = ('created_at',)
 
     def create(self, validated_data):
-        library, _ = Library.objects.get_or_create(created_by=self.context['request'].user)
+        library = Library.objects.get(created_by=self.context['request'].user)
         book_data = self.context['request'].data.get('book_data')
         authors = book_data.pop('authors') if 'authors' in book_data.keys() else None
         if 'created_by' in book_data.keys() and book_data['created_by']:
@@ -35,6 +35,16 @@ class LibraryBookSerializer(serializers.ModelSerializer):
                     author['name'] = author['name'].strip()
                     _ = Author.objects.create(book=book, **author)
             return LibraryBook.objects.create(library=library, book=book, **validated_data)
+        
+    def save(self, **kwargs):
+        try:
+            library = Library.objects.get(created_by=self.context['request'].user)
+            if not library.is_changed:
+                library.is_changed = True
+                library.save()
+        except:
+            Library.objects.create(created_by=self.context['request'].user)
+        return super().save(**kwargs)
 
 class LibrarySerializer(serializers.ModelSerializer):
     books = LibraryBookSerializer(many=True, read_only=True)

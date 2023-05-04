@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 coverage = "*"
 django = "*"
+django-crontab = "*"
 djangorestframework = "*"
 dj-database-url = "*"
 firebase-admin = "*"
@@ -13,6 +14,9 @@ gunicorn = "*"
 iso4217 = "*"
 psycopg2-binary = "*"
 python-dotenv = "*"
+spacy = "*"
+pandas = "*"
+scikit-learn = "*"
 
 [dev-packages]
 

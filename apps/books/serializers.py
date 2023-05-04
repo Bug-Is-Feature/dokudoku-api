@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from iso4217 import Currency
 from rest_framework import serializers
 
+from apps.library.models import Library
 from apps.users.serializers import UserSerializer
 from .models import Author, Book
 
@@ -21,9 +22,22 @@ class AuthorSerializer(serializers.ModelSerializer):
             else:
                 raise PermissionDenied
         elif book.created_by == user or user.is_admin:
-            return Author.objects.create(book=book, **validated_data)
+            response = Author.objects.create(book=book, **validated_data)
+            library = Library.objects.get(created_by=self.context['request'].user)
+            if not library.is_changed:
+                library.is_changed = True
+                library.save()
+            return response
         else:
             raise PermissionDenied
+    
+    def update(self, instance, validated_data):
+        response = super().update(instance, validated_data)
+        library = Library.objects.get(created_by=self.context['request'].user)
+        if not library.is_changed:
+            library.is_changed = True
+            library.save()
+        return response
 
 class BookSerializer(serializers.ModelSerializer):
     authors = AuthorSerializer(many=True)
@@ -57,3 +71,10 @@ class BookSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'google_book_id': 'Ensure this field has length of 12 characters.'})
 
         return super().validate(attrs)
+    
+    def save(self, **kwargs):
+        library = Library.objects.get(created_by=self.context['request'].user)
+        if not library.is_changed:
+            library.is_changed = True
+            library.save()
+        return super().save(**kwargs)

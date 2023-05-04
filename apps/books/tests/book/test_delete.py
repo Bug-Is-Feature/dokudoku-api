@@ -27,15 +27,22 @@ class BookDeletePermissionTest(BooksAppTestSetUp):
     def test_book_delete_no_permission(self):
         '''
         Simulate a user trying to delete a book 
-        but don't have a permission (not the owner of the book)
+        which is not allowed (user need to user /library-books path)
         
         An error message should return as response
         '''
-        request = self.factory.delete(f'/api/books/{self.book_obj1.id}/')
+        book = Book.objects.create(
+            title='test_book_permission',
+            page_count=284,
+            currency_code='THB',
+            price=250,
+            created_by=self.user
+        )
+        request = self.factory.delete(f'/api/books/{book.id}/')
         force_authenticate(request, user=self.user)
-        response = BookViewSet.as_view({'delete': 'destroy'})(request, pk=self.book_obj1.id)
+        response = BookViewSet.as_view({'delete': 'destroy'})(request, pk=book.id)
 
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND,
-            f'Expected http status 404, not {response.status_code}.')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN,
+            f'Expected http status 403, not {response.status_code}.')
         self.assertTrue(Book.objects.filter(id=self.book_obj1.id).exists(),
             f'Expected book with id `{self.book_obj1.id}` still exist, but the book got deleted with out permission.')

@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.test import force_authenticate
 
+from apps.library.models import Library
 from ..test_setup import BooksAppTestSetUp
 from ...models import Author
 from ...views import AuthorViewSet
@@ -24,12 +25,14 @@ class AuthorCreateTest(BooksAppTestSetUp):
             f'Expected http status 201, not {response.status_code}.')
         self.assertTrue(Author.objects.filter(name='test_create_author').exists(),
             'Expected `test_create_author` existed, but the author is not found.')
+        self.assertTrue(Library.objects.get(created_by=self.admin).is_changed,
+            'Expected library is_changed = `True`, but the value is not right.')
 
 class AuthorCreatePermissionTest(BooksAppTestSetUp):
 
     def test_author_create_no_permission(self):
         '''
-        Simulate a user/admin trying to create a book's author
+        Simulate a user trying to create a book's author
         but don't have a permission (not the owner of the book)
 
         An error message should return as response
@@ -45,3 +48,5 @@ class AuthorCreatePermissionTest(BooksAppTestSetUp):
             f'Expected http status 403, not {response.status_code}.')
         self.assertFalse(Author.objects.filter(name='test_create_author').exists(),
             'Expected no author with name `test_create_author`, but the author created with out permission.')
+        self.assertFalse(Library.objects.get(created_by=self.user).is_changed,
+            'Expected library is_changed = `False`, but the value is not right.')

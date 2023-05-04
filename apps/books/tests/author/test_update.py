@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.test import force_authenticate
 
+from apps.library.models import Library
 from ..test_setup import BooksAppTestSetUp
 from ...models import Author
 from ...views import AuthorViewSet
@@ -23,6 +24,8 @@ class AuthorUpdateTest(BooksAppTestSetUp):
             f'Expected http status 200, not {response.status_code}.')
         self.assertEqual(Author.objects.get(id=self.author_obj1.id).name, 'test_book_1_author_edited',
             'Expected updated data has name = `test_book_1_author_edited`, but the value is not right.')
+        self.assertTrue(Library.objects.get(created_by=self.admin).is_changed,
+            'Expected library is_changed = `True`, but the value is not right.')
 
 class AuthorUpdatePermissionTest(BooksAppTestSetUp):
 
@@ -43,3 +46,5 @@ class AuthorUpdatePermissionTest(BooksAppTestSetUp):
             f'Expected http status 403, not {response.status_code}.')
         self.assertEqual(Author.objects.get(id=self.author_obj2.id).name, 'test_book_2_author_1',
             f'Expected no change at author id: {self.author_obj2.id}, but the object changed.')
+        self.assertFalse(Library.objects.get(created_by=self.user).is_changed,
+            'Expected library is_changed = `False`, but the value is not right.')
