@@ -496,7 +496,7 @@ Example Response:
 -   GET
 
     -   NOTE: This route only recommend based-on incomplete book in library and user's most read book, if user have no session system will consider user's first added book to be a target.
-    -   NOTE 2: Recommendation result is store as file on cloud and update daily with cronjob (new user need to wait for the next day), if user have less than 2 **incomplete** books at the end of the day the result will not update or create.
+    -   NOTE 2: Recommendation result is store as file on cloud and update with cronjob (run at 12:00 and 00:00 GMT+7), if user have less than 2 **incomplete** books at scheduled time, the recommendation result will not update or create.
     -   Permission: Everyone
 
 Example Response:

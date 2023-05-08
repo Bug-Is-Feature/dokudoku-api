@@ -13,12 +13,31 @@ from apps.library.models import Library, LibraryBook
 from apps.reading_sessions.models import Session
 from .exceptions import FirebaseError, InsufficientBookError
 
-if not settings.TESTING:
-    bucket = storage.bucket()
+import string
+import spacy
+from spacy.lang.en import English
+from spacy.lang.en.stop_words import STOP_WORDS
+
+def spacy_tokenizer(sentence):
+    punctuations = string.punctuation
+
+    nlp = spacy.load('en_core_web_sm')
+    stop_words = STOP_WORDS
+
+    parser = English()
+
+    mytokens = parser(nlp(sentence))
+    mytokens = [ word.lemma_.lower().strip() if word.lemma_ != "-PRON-" else word.lower_ for word in mytokens ]
+    mytokens = [ word for word in mytokens if word not in stop_words and word not in punctuations ]
+
+    return mytokens
 
 class BookRecommender():
 
     def __init__(self):
+        if not settings.TESTING:
+            self.bucket = storage.bucket()
+            
         self.PICKLE_PATH = './apps/recommender/pickle'
         if settings.DEBUG:
             self.bucket_path = 'user_book_recommendation/mock/'
@@ -36,6 +55,9 @@ class BookRecommender():
             (book.category if book.category else '')).strip().lower()
 
     def create_recommend_result(self, user, k=4):
+        import __main__
+
+        __main__.spacy_tokenizer = spacy_tokenizer
         bow_vector = pickle.load(open(self.PICKLE_PATH + '/bow_vector.pickle', 'rb'))
 
         # build tree
@@ -79,7 +101,7 @@ class BookRecommender():
 
         if not settings.TESTING:
             try:
-                blob = bucket.blob(self.bucket_path + f'{user.uid}.txt')
+                blob = self.bucket.blob(self.bucket_path + f'{user.uid}.txt')
                 blob.upload_from_string(result_text)
             except:
                 raise FirebaseError
@@ -89,7 +111,7 @@ class BookRecommender():
 
     def get_recommend_result(self, uid):
         if not settings.TESTING:
-            blob = bucket.blob(self.bucket_path + f'{uid}.txt')
+            blob = self.bucket.blob(self.bucket_path + f'{uid}.txt')
             if not blob.exists():
                 raise FileNotFoundError('Recommendation file is not found on firebase.')
             return Book.objects.filter(pk__in=[int(idx) for idx in blob.download_as_text().split(',')])

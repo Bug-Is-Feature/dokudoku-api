@@ -12,10 +12,21 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 import os
 import sys
+import json
+import base64
+import firebase_admin
 import dj_database_url
 
-from pathlib import Path
 from dotenv import load_dotenv
+from pathlib import Path
+load_dotenv()
+
+# Initialize firebase admin sdk
+FIREBASE_CREDENTIAL = firebase_admin.credentials.Certificate(json.loads(base64.b64decode(
+        os.environ.get('GOOGLE_APPLICATION_CREDENTIALS_BASE64'))))
+default_app = firebase_admin.initialize_app(FIREBASE_CREDENTIAL, {
+    'storageBucket': os.environ.get('FIREBASE_BUCKET_NAME')
+})
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,7 +34,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
-load_dotenv()
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
@@ -34,11 +44,13 @@ TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 ALLOWED_HOSTS = [
     '10.0.2.2',
     '127.0.0.1',
+    '0.0.0.0',
 ]
 
 INTERNAL_IPS = [
     '10.0.2.2',
     '127.0.0.1',
+    '0.0.0.0',
 ]
 
 # Variable automatically set by Render to get web service host
@@ -49,7 +61,6 @@ if RENDER_EXTERNAL_HOSTNAME:
 # Application definition
 
 INSTALLED_APPS = [
-    'django_crontab',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -64,6 +75,7 @@ INSTALLED_APPS = [
     'apps.library',
     'apps.achievements',
     'apps.recommender',
+    'apps.cronjobs',
 ]
 
 MIDDLEWARE = [
@@ -171,8 +183,52 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CRONJOBS = [
-    ('0 0 */1 * *', 'apps.recommender.cron.recommender_scheduled_job'
-    #  , '>> /cron/django_cron.log 2>&1'
-     )
-]
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'generic': {
+            'format': '[%(asctime)s] [%(process)d] [%(levelname)s] %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S %z',
+            '()': 'logging.Formatter',
+        },
+        'cron': {
+            'format': '[%(asctime)s] CRON[%(process)d]: %(levelname)s (%(message)s)',
+            'datefmt': '%Y-%m-%d %H:%M:%S %z',
+            '()': 'logging.Formatter',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'generic',
+        },
+        'cron_console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'cron',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'propagate': True,
+        },
+        'gunicorn.error': {
+            'level': 'INFO',
+            'handlers': ['console'],
+            'propagate': True,
+        },
+        'gunicorn.access': {
+            'level': 'INFO',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'apps.cronjobs.jobs': {
+            'level': 'INFO',
+            'handlers': ['cron_console'],
+            'propagate': False,
+        }
+    },
+}

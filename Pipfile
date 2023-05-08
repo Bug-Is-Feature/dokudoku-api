@@ -4,9 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+apscheduler = "*"
 coverage = "*"
 django = "*"
-django-crontab = "*"
 djangorestframework = "*"
 dj-database-url = "*"
 firebase-admin = "*"
@@ -17,6 +17,7 @@ python-dotenv = "*"
 spacy = "*"
 pandas = "*"
 scikit-learn = "*"
+urllib3 = "==1.26.15"
 
 [dev-packages]
 

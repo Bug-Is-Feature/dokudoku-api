@@ -4,9 +4,11 @@ services:
     django:
         build: .
         container_name: dokudoku-api
-        volumes:
-            - .:/usr/src/app
+        # volumes:
+        #     - .:/usr/src
         env_file: .env
+        environment:
+            - TZ=Asia/Bangkok
         ports:
             - '8000:8000'
         depends_on:
@@ -15,6 +17,8 @@ services:
     db:
         image: postgres:15
         environment:
+            - TZ=GMT+7
+            - PGTZ=GMT+7
             - POSTGRES_HOST_AUTH_METHOD=trust
         ports:
             - '5432:5432'

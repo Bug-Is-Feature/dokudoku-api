@@ -1,19 +1,23 @@
 FROM python:3.9.16
 
-RUN apt update && apt-get install cron -y && alias py=python
+RUN apt update && apt install tzdata -y && alias py=python
+    # apt-get install cron -y
 
-ENV PYTHONUNBUFFERED 1
+ENV TZ="Asia/Bangkok"
+ENV PYTHONUNBUFFERED=TRUE
 
-# WORKDIR /usr/src/app
+RUN pip install --upgrade pip
 
-COPY . .
+# WORKDIR /usr/src
+
+COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
-# django-crontab logfile
-# RUN mkdir /cron
-# RUN touch /cron/django_cron.log
+COPY . .
 
 EXPOSE 8000
 
-CMD service cron start && python manage.py crontab add && gunicorn config.wsgi:application
+RUN chmod +x ./docker-entrypoint.sh
+
+ENTRYPOINT [ "./docker-entrypoint.sh" ]
